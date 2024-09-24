@@ -1,5 +1,6 @@
 package com.comst.data.network
 
+import com.comst.data.BuildConfig
 import com.comst.domain.repository.TokenRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -11,15 +12,11 @@ class TokenInterceptor @Inject constructor(
 ) : Interceptor {
     companion object {
         const val AUTHORIZATION_HEADER = "Authorization"
-        const val TOKEN_TYPE = "Bearer"
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = runBlocking {
-            tokenRepository.getAccessToken()
-        }
         val request = chain.request().newBuilder().apply {
-            addHeader(AUTHORIZATION_HEADER, "$TOKEN_TYPE $token")
+            addHeader(AUTHORIZATION_HEADER, "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}")
         }
 
         return chain.proceed(request.build())

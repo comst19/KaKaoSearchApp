@@ -18,7 +18,8 @@ android {
                 arguments["room.schemaLocation"] = "$projectDir/schemas"
             }
         }
-        buildConfigField("String", "BASE_URL", properties.getProperty("base_url"))
+        buildConfigField("String", "KAKAO_BASE_URL", properties.getProperty("kakao_api_url"))
+        buildConfigField("String", "KAKAO_REST_API_KEY", properties.getProperty("kakao_rest_api_key"))
     }
 
     buildFeatures {

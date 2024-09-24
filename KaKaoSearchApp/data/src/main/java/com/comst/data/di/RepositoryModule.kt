@@ -1,7 +1,9 @@
 package com.comst.data.di
 
+import com.comst.data.repository.kakao.search.KaKaoSearchRepositoryImpl
 import com.comst.data.repository.token.TokenRepositoryImpl
 import com.comst.data.repository.sample.SampleRepositoryImpl
+import com.comst.domain.repository.KaKaoSearchRepository
 import com.comst.domain.repository.SampleRepository
 import com.comst.domain.repository.TokenRepository
 import dagger.Binds
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindSampleRepository(
         sampleRepository: SampleRepositoryImpl
     ): SampleRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindKaKaoSearchRepository(
+        kaKaoSearchRepository: KaKaoSearchRepositoryImpl
+    ): KaKaoSearchRepository
 }
