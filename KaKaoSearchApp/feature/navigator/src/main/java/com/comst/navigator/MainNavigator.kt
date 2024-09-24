@@ -9,8 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.comst.favorite_shared_preferences.favorite.navigateFavoriteSharedPreferences
+import com.comst.favorite_shared_preferences.navigation.FavoriteSharedPreferencesRoute
 import com.comst.home.main.navigateHome
 import com.comst.home.navigation.HomeRoute
+import com.comst.search_custom_paging.navigation.SearchCustomPagingRoute
+import com.comst.search_custom_paging.search.navigateSearchCustomPaging
 import com.comst.signin.navigation.SignInRoute
 import com.comst.signin.navigation.navigateSignIn
 import com.comst.signin.navigation.navigateSignUp
@@ -42,6 +46,8 @@ class MainNavigator(
 
         when(tab){
             MainNavigationTab.HOME -> navController.navigateHome(navOptions)
+            MainNavigationTab.CUSTOM_SEARCH -> navController.navigateSearchCustomPaging(navOptions)
+            MainNavigationTab.SHARED_PREFERENCE_FAVORITE -> navController.navigateFavoriteSharedPreferences(navOptions)
         }
     }
 
@@ -65,8 +71,32 @@ class MainNavigator(
         navController.navigateSignIn()
     }
 
+    /**
+     * SignUp Navigation
+     */
     fun navigateSignUp() {
         navController.navigateSignUp()
+    }
+
+    /**
+     * SearchCustomPaging Navigation
+     */
+    fun navigateSearchCustomPaging(){
+        navController.navigate(SearchCustomPagingRoute.defaultRoute) {
+            popUpTo(SearchCustomPagingRoute.defaultRoute) {
+                inclusive = true
+            }
+        }
+    }
+    /**
+     * FavoriteSharedPreferences Navigation
+     */
+    fun navigateFavoriteSharedPreferences(){
+        navController.navigate(FavoriteSharedPreferencesRoute.defaultRoute) {
+            popUpTo(FavoriteSharedPreferencesRoute.defaultRoute) {
+                inclusive = true
+            }
+        }
     }
 
     @Composable

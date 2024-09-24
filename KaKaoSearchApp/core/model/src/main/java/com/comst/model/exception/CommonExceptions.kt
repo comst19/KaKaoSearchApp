@@ -1,4 +1,4 @@
-package com.comst.model
+package com.comst.model.exception
 
 class BadRequestException(
     override val message: String = "잘못된 요청입니다..",

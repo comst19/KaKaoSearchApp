@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonClass
 
 // 서버와 맞추기
 @JsonClass(generateAdapter = true)
-data class ApiResponse<T>(
+data class BaseResponse<T>(
     val message: String,
     val status: String,
     val data: T,

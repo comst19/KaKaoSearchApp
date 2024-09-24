@@ -6,9 +6,6 @@ import androidx.navigation.compose.composable
 import com.comst.home.main.HomeMainRoute
 import com.comst.ui.SnackbarToken
 
-class HomeNavigation {
-}
-
 fun NavGraphBuilder.homeNavGraph(
     padding: PaddingValues,
     onShowSnackbar: (SnackbarToken) -> Unit,
@@ -23,6 +20,5 @@ fun NavGraphBuilder.homeNavGraph(
 }
 
 object HomeRoute {
-
     const val defaultRoute = "home"
 }

@@ -18,7 +18,6 @@ internal class ApiResultCallAdapter<R>(
     override fun responseType(): Type = successType
 }
 
-
 private class ApiResultCall<R>(
     private val delegate: Call<R>,
     private val successType: Type,
@@ -44,7 +43,7 @@ private class ApiResultCall<R>(
 
                 return if (successType == Unit::class.java) {
                     @Suppress("UNCHECKED_CAST")
-                    (ApiResult.successOf(Unit as R))
+                    ApiResult.successOf(Unit as R)
                 } else {
                     ApiResult.Failure.UnknownApiError(
                         IllegalStateException(

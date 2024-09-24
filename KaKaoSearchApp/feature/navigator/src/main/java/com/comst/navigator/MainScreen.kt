@@ -26,13 +26,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import com.comst.designsystem.theme.Background100
+import com.comst.favorite_shared_preferences.navigation.favoriteSharedPreferencesNavGraph
 import com.comst.home.navigation.homeNavGraph
+import com.comst.search_custom_paging.navigation.searchCustomPagingRouteNavGraph
 import com.comst.signin.navigation.signInNavGraph
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
-    navigator: MainNavigator = rememberMainNavigator()
+    navigator: MainNavigator = rememberMainNavigator(),
 ) {
 
     Scaffold(
@@ -45,13 +47,13 @@ fun MainScreen(
                 bottomTavItems = navigator.bottomTabItems.value
             )
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
         NavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination,
             enterTransition = { fadeIn(animationSpec = tween(0)) },
             exitTransition = { fadeOut(animationSpec = tween(0)) },
-        ){
+        ) {
             signInNavGraph(
                 navigateToSignUp = navigator::navigateSignUp,
                 navigateToHome = navigator::navigateHomeAndClearBackStack,
@@ -61,6 +63,20 @@ fun MainScreen(
 
             homeNavGraph(
                 padding = innerPadding,
+                onShowSnackbar = viewModel::onShowSnackbar,
+                navigateBack = navigator::popBackStack
+            )
+
+            favoriteSharedPreferencesNavGraph(
+                padding = innerPadding,
+                navigateFavoriteSharedPreferences = navigator::navigateFavoriteSharedPreferences,
+                onShowSnackbar = viewModel::onShowSnackbar,
+                navigateBack = navigator::popBackStack
+            )
+
+            searchCustomPagingRouteNavGraph(
+                padding = innerPadding,
+                navigateSearchCustomPaging = navigator::navigateSearchCustomPaging,
                 onShowSnackbar = viewModel::onShowSnackbar,
                 navigateBack = navigator::popBackStack
             )
@@ -74,7 +90,7 @@ fun BottomNav(
     modifier: Modifier,
     itemClick: (MainNavigationTab) -> Unit = {},
     selectedTab: MainNavigationTab,
-    bottomTavItems: List<MainNavigationTab>? = null
+    bottomTavItems: List<MainNavigationTab>? = null,
 ) {
     val selectedItem = rememberUpdatedState(newValue = selectedTab)
 
@@ -98,7 +114,11 @@ fun BottomNav(
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = item.iconId),
                                 contentDescription = null,
-                                tint = item.iconTint
+                                tint = if (selectedItem.value == item) {
+                                    Color.Unspecified
+                                } else {
+                                    item.unSelectedIconTint
+                                }
                             )
                         },
                         label = {
