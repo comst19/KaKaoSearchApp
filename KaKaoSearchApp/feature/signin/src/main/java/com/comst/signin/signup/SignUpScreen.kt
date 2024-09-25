@@ -26,28 +26,33 @@ import com.comst.designsystem.theme.BaseTheme
 import com.comst.signin.signup.SignUpContract.SignUpIntent
 import com.comst.signin.signup.SignUpContract.SignUpSideEffect
 import com.comst.signin.signup.SignUpContract.SignUpUIState
-import com.comst.ui.base.BaseScreen
+import com.comst.ui.SnackbarToken
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 import kotlinx.coroutines.delay
 
 @Composable
 fun SignUpRoute(
     viewModel: SignUpViewModel = hiltViewModel(),
     navigateToHome: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onShowSnackBar: (SnackbarToken) -> Unit
 ) {
-    val handleEffect: (SignUpSideEffect) -> Unit = { effect ->
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
         when (effect) {
             is SignUpSideEffect.NavigateBack -> onBackClick()
             is SignUpSideEffect.NavigateToHome -> navigateToHome()
         }
     }
 
-    BaseScreen(viewModel = viewModel, handleEffect = handleEffect) { uiState ->
-        SignUpScreen(
-            uiState = uiState,
-            setIntent = viewModel::setIntent
-        )
-    }
+
+    SignUpScreen(
+        uiState = uiState,
+        setIntent = viewModel::setIntent
+    )
 }
 
 @Composable

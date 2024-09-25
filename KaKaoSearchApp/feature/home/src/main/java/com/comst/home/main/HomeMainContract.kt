@@ -1,7 +1,6 @@
 package com.comst.home.main
 
 import androidx.compose.runtime.Immutable
-import com.comst.ui.SnackbarToken
 import com.comst.ui.base.BaseEvent
 import com.comst.ui.base.BaseIntent
 import com.comst.ui.base.BaseSideEffect
@@ -11,19 +10,18 @@ class HomeMainContract {
 
     @Immutable
     data class HomeMainUIState(
-        val isLoading: Boolean = false,
-        val snackbarToken: SnackbarToken = SnackbarToken(),
+        val isLoading: Boolean = false
     ): BaseUIState
 
-    sealed class HomeMainSideEffect: BaseSideEffect {
+    sealed interface HomeMainSideEffect: BaseSideEffect {
 
     }
 
-    sealed class HomeMainIntent: BaseIntent {
+    sealed interface HomeMainIntent: BaseIntent {
 
     }
 
-    sealed class HomeMainEvent: BaseEvent {
+    sealed interface HomeMainEvent: BaseEvent {
 
     }
 }

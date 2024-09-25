@@ -13,4 +13,8 @@ class SearchCustomPagingViewModel @Inject constructor(
 
     }
 
+    override fun handleEvent(event: SearchCustomPagingEvent) {
+        TODO("Not yet implemented")
+    }
+
 }

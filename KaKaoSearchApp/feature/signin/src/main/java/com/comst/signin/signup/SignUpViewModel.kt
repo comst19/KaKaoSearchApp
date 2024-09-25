@@ -17,4 +17,8 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    override fun handleEvent(event: SignUpEvent) {
+
+    }
+
 }

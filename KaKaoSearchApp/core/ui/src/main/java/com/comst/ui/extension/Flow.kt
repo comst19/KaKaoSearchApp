@@ -50,9 +50,9 @@ internal fun <T> Flow<T>.collectAsStateWithLifecycle(
 
 // 단발성 이벤트를 처리할 때 사용
 @Composable
-fun <T> Flow<T>.collectWithLifecycle(
+inline fun <reified T> Flow<T>.collectWithLifecycle(
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    action: suspend (T) -> Unit,
+    noinline action: suspend (T) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 

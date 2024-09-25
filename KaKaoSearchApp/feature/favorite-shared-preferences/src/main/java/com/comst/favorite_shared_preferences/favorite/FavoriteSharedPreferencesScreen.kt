@@ -19,7 +19,8 @@ import com.comst.designsystem.theme.BaseTheme
 import com.comst.favorite_shared_preferences.favorite.FavoriteSharedPreferencesContract.*
 import com.comst.favorite_shared_preferences.navigation.FavoriteSharedPreferencesRoute
 import com.comst.ui.SnackbarToken
-import com.comst.ui.base.BaseScreen
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 
 fun NavController.navigateFavoriteSharedPreferences(navOptions: NavOptions) {
     navigate(FavoriteSharedPreferencesRoute.defaultRoute,navOptions)
@@ -31,17 +32,18 @@ fun FavoriteSharedPreferencesRoute(
     padding: PaddingValues,
     onShowSnackBar: (SnackbarToken) -> Unit
 ){
-    val handleEffect: (FavoriteSharedPreferencesSideEffect) -> Unit = { effect ->
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
 
     }
 
-    BaseScreen(viewModel = viewModel, handleEffect = handleEffect) { uiState ->
-        FavoriteSharedPreferencesScreen(
-            uiState = uiState,
-            padding = padding,
-            setIntent = viewModel::setIntent
-        )
-    }
+    FavoriteSharedPreferencesScreen(
+        uiState = uiState,
+        padding = padding,
+        setIntent = viewModel::setIntent
+    )
 }
 
 @Composable

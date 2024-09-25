@@ -25,13 +25,15 @@ fun NavGraphBuilder.signInNavGraph(
         LoginRoute (
             navigateToSignUp = navigateToSignUp,
             navigateToHome = navigateToHome,
+            onShowSnackBar = onShowSnackBar
         )
     }
 
     composable(route = SignInRoute.signUpRoute){
         SignUpRoute(
             navigateToHome = navigateToHome,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onShowSnackBar = onShowSnackBar
         )
     }
 }

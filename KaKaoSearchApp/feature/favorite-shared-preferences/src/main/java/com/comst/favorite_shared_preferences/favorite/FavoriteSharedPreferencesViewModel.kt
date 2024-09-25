@@ -13,4 +13,8 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
 
     }
 
+    override fun handleEvent(event: FavoriteSharedPreferencesEvent) {
+
+    }
+
 }

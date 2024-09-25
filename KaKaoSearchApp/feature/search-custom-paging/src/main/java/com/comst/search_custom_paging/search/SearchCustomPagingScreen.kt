@@ -19,7 +19,8 @@ import com.comst.designsystem.theme.BaseTheme
 import com.comst.search_custom_paging.navigation.SearchCustomPagingRoute
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.*
 import com.comst.ui.SnackbarToken
-import com.comst.ui.base.BaseScreen
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 
 fun NavController.navigateSearchCustomPaging(navOptions: NavOptions) {
     navigate(SearchCustomPagingRoute.defaultRoute,navOptions)
@@ -31,17 +32,19 @@ fun SearchCustomPagingRoute(
     padding: PaddingValues,
     onShowSnackBar: (SnackbarToken) -> Unit
 ){
-    val handleEffect: (SearchCustomPagingSideEffect) -> Unit = { effect ->
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
 
     }
 
-    BaseScreen(viewModel = viewModel, handleEffect = handleEffect) { uiState ->
-        SearchCustomPagingScreen(
-            uiState = uiState,
-            padding = padding,
-            setIntent = viewModel::setIntent
-        )
-    }
+    SearchCustomPagingScreen(
+        uiState = uiState,
+        padding = padding,
+        setIntent = viewModel::setIntent
+    )
+
 }
 
 @Composable

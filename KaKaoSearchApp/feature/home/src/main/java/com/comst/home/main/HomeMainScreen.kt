@@ -21,7 +21,8 @@ import com.comst.home.main.HomeMainContract.HomeMainSideEffect
 import com.comst.home.main.HomeMainContract.HomeMainUIState
 import com.comst.home.navigation.HomeRoute
 import com.comst.ui.SnackbarToken
-import com.comst.ui.base.BaseScreen
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 
 fun NavController.navigateHome(navOptions: NavOptions) {
     navigate(HomeRoute.defaultRoute,navOptions)
@@ -34,17 +35,16 @@ fun HomeMainRoute(
     onShowSnackBar: (SnackbarToken) -> Unit
 ) {
 
-    val handleEffect: (HomeMainSideEffect) -> Unit = { effect ->
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
 
     }
-
-    BaseScreen(viewModel = viewModel, handleEffect = handleEffect) { uiState ->
-        HomeMainScreen(
-            uiState = uiState,
-            padding = padding,
-            setIntent = viewModel::setIntent
-        )
-    }
+    HomeMainScreen(
+        uiState = uiState,
+        padding = padding,
+        setIntent = viewModel::setIntent
+    )
 }
 
 

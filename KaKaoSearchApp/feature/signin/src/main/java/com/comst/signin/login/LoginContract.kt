@@ -13,17 +13,17 @@ class LoginContract {
         val isLoading : Boolean = false
     ): BaseUIState
 
-    sealed class LoginSideEffect : BaseSideEffect {
-        data object NavigateToHome: LoginSideEffect()
-        data object NavigateToSignUp: LoginSideEffect()
+    sealed interface LoginSideEffect : BaseSideEffect {
+        data object NavigateToHome: LoginSideEffect
+        data object NavigateToSignUp: LoginSideEffect
     }
 
-    sealed class LoginIntent : BaseIntent {
-        data object SignUpClick: LoginIntent()
-        data object HomeClick: LoginIntent()
+    sealed interface LoginIntent : BaseIntent {
+        data object SignUpClick: LoginIntent
+        data object HomeClick: LoginIntent
     }
 
-    sealed class LoginEvent : BaseEvent {
+    sealed interface LoginEvent : BaseEvent {
 
     }
 }

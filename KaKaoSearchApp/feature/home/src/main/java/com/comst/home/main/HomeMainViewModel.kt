@@ -14,4 +14,8 @@ class HomeMainViewModel @Inject constructor(
 
     }
 
+    override fun handleEvent(event: HomeMainEvent) {
+
+    }
+
 }

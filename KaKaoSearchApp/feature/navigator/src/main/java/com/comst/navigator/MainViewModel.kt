@@ -22,6 +22,11 @@ class MainViewModel @Inject constructor(
 
     }
 
+    override fun handleEvent(event: MainEvent) {
+
+    }
+
+
     fun onShowSnackbar(snackbarToken: SnackbarToken){
         viewModelScope.launch {
             mutex.withLock {

@@ -16,15 +16,15 @@ class MainContract {
         val snackbarVisible: Boolean = false,
     ): BaseUIState
 
-    sealed class MainSideEffect : BaseSideEffect {
+    sealed interface MainSideEffect : BaseSideEffect {
+        data object ShowSnackBar : MainSideEffect
+    }
+
+    sealed interface MainIntent : BaseIntent {
 
     }
 
-    sealed class MainIntent : BaseIntent {
-
-    }
-
-    sealed class MainEvent : BaseEvent {
+    sealed interface MainEvent : BaseEvent {
 
     }
 }

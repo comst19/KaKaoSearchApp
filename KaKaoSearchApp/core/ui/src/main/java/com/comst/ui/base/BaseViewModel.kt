@@ -69,37 +69,7 @@ abstract class BaseViewModel<S : BaseUIState, A : BaseSideEffect, I : BaseIntent
 
     protected abstract fun handleIntent(intent: I)
 
-    protected open fun handleEvent(event: E) {
-        when (event) {
-            is BaseEvent.ReAuthenticationRequired -> {
-                setEffect(BaseSideEffect.NavigateToLogin as A)
-            }
-            is BaseEvent.BadRequest -> {
-
-            }
-            is BaseEvent.AccountNotFound -> {
-
-            }
-            is BaseEvent.ServerNotFound -> {
-
-            }
-            is BaseEvent.InternalServerError -> {
-
-            }
-
-        }
-    }
-
-    protected fun setToastEffect(message: String) {
-        viewModelScope.launch {
-            setEffect(BaseSideEffect.ShowToast(message) as A)
-        }
-    }
-
-    private fun onReAuthenticationRequired() {
-        setToastEffect("세션이 만료되었습니다. 다시 로그인해주세요.")
-        setEffect(BaseSideEffect.NavigateToLogin as A)
-    }
+    protected abstract fun handleEvent(event: E)
 
     protected fun setState(reduce: S.() -> S) {
         val state = currentState.reduce()

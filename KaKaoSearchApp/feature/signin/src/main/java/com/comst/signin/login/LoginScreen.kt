@@ -22,12 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.signin.login.LoginContract.LoginIntent
-import com.comst.signin.login.LoginContract.LoginSideEffect
-import com.comst.signin.login.LoginContract.LoginSideEffect.NavigateToHome
-import com.comst.signin.login.LoginContract.LoginSideEffect.NavigateToSignUp
-import com.comst.signin.login.LoginContract.LoginUIState
-import com.comst.ui.base.BaseScreen
+import com.comst.signin.login.LoginContract.*
+import com.comst.ui.SnackbarToken
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 import kotlinx.coroutines.delay
 
 @Composable
@@ -35,20 +33,23 @@ fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel(),
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
+    onShowSnackBar: (SnackbarToken) -> Unit
+
 ) {
-    val handleEffect: (LoginSideEffect) -> Unit = { effect ->
-        when (effect) {
-            is NavigateToHome -> navigateToHome()
-            is NavigateToSignUp -> navigateToSignUp()
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
+        when(effect){
+            is LoginSideEffect.NavigateToHome -> navigateToHome()
+            is LoginSideEffect.NavigateToSignUp -> navigateToSignUp()
         }
     }
 
-    BaseScreen(viewModel = viewModel, handleEffect = handleEffect) { uiState ->
-        LoginScreen(
-            uiState = uiState,
-            setIntent = viewModel::setIntent
-        )
-    }
+    LoginScreen(
+        uiState = uiState,
+        setIntent = viewModel::setIntent
+    )
 }
 
 @Composable

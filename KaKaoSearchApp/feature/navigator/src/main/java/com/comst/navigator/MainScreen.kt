@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -25,17 +26,30 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
+import com.comst.designsystem.component.snackbar.KaKaoSnackbar
 import com.comst.designsystem.theme.Background100
 import com.comst.favorite_shared_preferences.navigation.favoriteSharedPreferencesNavGraph
 import com.comst.home.navigation.homeNavGraph
 import com.comst.search_custom_paging.navigation.searchCustomPagingRouteNavGraph
 import com.comst.signin.navigation.signInNavGraph
+import com.comst.ui.extension.collectAsStateWithLifecycle
+import com.comst.ui.extension.collectWithLifecycle
 
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
+
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    viewModel.effect.collectWithLifecycle { effect ->
+        when (effect) {
+            is MainContract.MainSideEffect.ShowSnackBar -> {
+                viewModel.onShowSnackbar(uiState.snackbarToken)
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -79,6 +93,16 @@ fun MainScreen(
                 navigateSearchCustomPaging = navigator::navigateSearchCustomPaging,
                 onShowSnackbar = viewModel::onShowSnackbar,
                 navigateBack = navigator::popBackStack
+            )
+        }
+        with(uiState){
+            KaKaoSnackbar(
+                modifier = Modifier.padding(innerPadding),
+                visible = snackbarVisible,
+                message = snackbarToken.message,
+                actionIconId = snackbarToken.actionIcon,
+                actionButtonText = snackbarToken.actionButtonText,
+                onClickActionButton = snackbarToken.onClickActionButton,
             )
         }
     }

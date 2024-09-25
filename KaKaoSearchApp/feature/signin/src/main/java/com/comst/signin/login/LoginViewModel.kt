@@ -17,4 +17,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    override fun handleEvent(event: LoginEvent) {
+
+    }
+
 }
