@@ -9,12 +9,23 @@ import javax.inject.Inject
 class SearchCustomPagingViewModel @Inject constructor(
 
 ): BaseViewModel<SearchCustomPagingUIState, SearchCustomPagingSideEffect, SearchCustomPagingIntent, SearchCustomPagingEvent>(SearchCustomPagingUIState()) {
-    override fun handleIntent(intent: SearchCustomPagingIntent) {
 
+    override fun handleIntent(intent: SearchCustomPagingIntent) {
+        when(intent){
+            is SearchCustomPagingIntent.QueryChange -> onQueryChange(intent.query)
+        }
     }
 
     override fun handleEvent(event: SearchCustomPagingEvent) {
-        TODO("Not yet implemented")
+
+    }
+
+    private fun onQueryChange(query: String){
+        setState {
+            copy(
+                queryValue = query
+            )
+        }
     }
 
 }
