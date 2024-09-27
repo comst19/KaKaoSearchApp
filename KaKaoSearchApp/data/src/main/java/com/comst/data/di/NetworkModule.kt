@@ -2,13 +2,8 @@ package com.comst.data.di
 
 import com.comst.data.BuildConfig.KAKAO_BASE_URL
 import com.comst.data.network.ApiResultCallAdapterFactory
+import com.comst.data.network.MoshiProvider
 import com.comst.data.network.TokenInterceptor
-import com.comst.data.util.LocalDateAdapter
-import com.comst.data.util.LocalDateTimeAdapter
-import com.comst.data.util.UnitJsonAdapter
-import com.comst.data.util.ZonedDateTimeAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,19 +21,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun moshi(): Moshi =
-        Moshi.Builder()
-            .add(LocalDateTimeAdapter())
-            .add(LocalDateAdapter())
-            .add(ZonedDateTimeAdapter())
-            .add(UnitJsonAdapter())
-            .addLast(KotlinJsonAdapterFactory())
-            .build()
+    fun provideMoshiProvider(): MoshiProvider = MoshiProvider
 
     @Provides
     @Singleton
-    fun provideMoshiConverterFactory(moshi: Moshi): MoshiConverterFactory =
-        MoshiConverterFactory.create(moshi)
+    fun provideMoshiConverterFactory(moshiProvider: MoshiProvider): MoshiConverterFactory =
+        MoshiConverterFactory.create(moshiProvider.moshi)
 
     @Provides
     @Singleton

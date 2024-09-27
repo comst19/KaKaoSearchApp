@@ -1,10 +1,15 @@
 package com.comst.data.network
 
+import com.comst.data.dto.ErrorResponse
+import com.comst.domain.util.DomainResult
 import com.comst.model.exception.BadRequestException
+import com.comst.model.exception.BaseServerError
 import com.comst.model.exception.ForbiddenException
 import com.comst.model.exception.NetworkException
 import com.comst.model.exception.NotFoundException
 import com.comst.model.exception.UnknownException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 sealed interface ApiResult<out T> {
     data class Success<T>(val data: T) : ApiResult<T>
@@ -79,14 +84,34 @@ internal fun ApiResult<*>.throwFailure() {
     }
 }
 
+
 private fun handleHttpError(httpError: ApiResult.Failure.HttpError): Exception {
-    return handleNonHttpError(httpError.code)
+    val errorResponse = MoshiProvider.getErrorBody(httpError.body)
+    return errorResponse?.run {
+        handleServerError(this)
+    } ?: run {
+        handleNonServerError(httpError.code)
+    }
 }
 
-private fun handleNonHttpError(httpStatusCode: Int): Exception = when (httpStatusCode) {
+private fun handleServerError(errorResponse: ErrorResponse): Exception = runCatching {
+    BaseServerError.valueOf(errorResponse.errorType).exception
+}.getOrNull() ?: handleNonServerError(400)
+
+
+private fun handleNonServerError(httpStatusCode: Int): Exception = when (httpStatusCode) {
     400 -> BadRequestException()
     403 -> ForbiddenException()
     404 -> NotFoundException()
     500, 501, 502, 503, 504, 505 -> NetworkException()
     else -> UnknownException()
+}
+
+fun <T, R> Flow<ApiResult<T>>.mapToDomainResult(transform: (T) -> R): Flow<DomainResult<R>> {
+    return this.map { apiResult ->
+        when (apiResult) {
+            is ApiResult.Success -> DomainResult.Success(transform(apiResult.data))
+            is ApiResult.Failure -> DomainResult.Failure(apiResult.safeThrowable())
+        }
+    }
 }

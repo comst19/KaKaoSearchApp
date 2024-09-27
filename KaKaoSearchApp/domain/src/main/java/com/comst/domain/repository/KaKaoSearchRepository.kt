@@ -1,5 +1,6 @@
 package com.comst.domain.repository
 
+import com.comst.domain.util.DomainResult
 import com.comst.model.KaKaoSearch
 import kotlinx.coroutines.flow.Flow
 
@@ -9,14 +10,14 @@ interface KaKaoSearchRepository {
         sort: KaKaoSearchSortType,
         page: Int,
         size: Int
-    ): Flow<KaKaoSearch>
+    ): Flow<DomainResult<KaKaoSearch>>
 
     suspend fun getKaKaoVideoSearchList(
         query: String,
         sort: KaKaoSearchSortType,
         page: Int,
         size: Int
-    ): Flow<KaKaoSearch>
+    ): Flow<DomainResult<KaKaoSearch>>
 }
 
 enum class KaKaoSearchSortType(val value: String) {
