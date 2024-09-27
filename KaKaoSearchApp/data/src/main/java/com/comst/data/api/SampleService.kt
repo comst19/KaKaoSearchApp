@@ -9,8 +9,8 @@ import retrofit2.http.GET
 interface SampleService {
 
     @GET("sample")
-    suspend fun getSample(): ApiResult<BaseResponse<SampleResponse>>
+    suspend fun getSample(): ApiResult<SampleResponse>
 
     @GET("jwtToken")
-    suspend fun getJwtToken(): ApiResult<BaseResponse<JwtTokenResponse>>
+    suspend fun getJwtToken(): ApiResult<JwtTokenResponse>
 }

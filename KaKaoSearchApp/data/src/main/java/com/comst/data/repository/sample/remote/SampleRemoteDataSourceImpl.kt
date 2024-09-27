@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SampleRemoteDataSourceImpl @Inject constructor(
     private val sampleService: SampleService
 ): SampleRemoteDataSource {
-    override suspend fun getSample() = sampleService.getSample().getOrThrow().data.toDomainModel()
+    override suspend fun getSample() = sampleService.getSample().getOrThrow()
 
-    override suspend fun getJwtToken(): JwtToken = sampleService.getJwtToken().getOrThrow().data.toDomainModel()
+    override suspend fun getJwtToken() = sampleService.getJwtToken().getOrThrow()
 }

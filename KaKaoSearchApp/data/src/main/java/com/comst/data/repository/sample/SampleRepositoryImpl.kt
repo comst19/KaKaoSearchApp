@@ -1,5 +1,6 @@
 package com.comst.data.repository.sample
 
+import com.comst.data.dto.sample.response.toDomainModel
 import com.comst.data.repository.sample.remote.SampleRemoteDataSource
 import com.comst.domain.repository.SampleRepository
 import com.comst.domain.repository.TokenRepository
@@ -13,12 +14,12 @@ class SampleRepositoryImpl @Inject constructor(
 ): SampleRepository{
 
     override suspend fun getSample(): Sample =
-        sampleRemoteDataSource.getSample()
+        sampleRemoteDataSource.getSample().toDomainModel()
 
     override suspend fun getJwtToken(): JwtToken {
         val jwtToken = sampleRemoteDataSource.getJwtToken()
         tokenRepository.saveAccessToken(jwtToken.accessToken)
         tokenRepository.saveRefreshToken(jwtToken.refreshToken)
-        return jwtToken
+        return jwtToken.toDomainModel()
     }
 }
