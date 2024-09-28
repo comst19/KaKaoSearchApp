@@ -1,6 +1,7 @@
 package com.comst.search_custom_paging.search
 
 import androidx.compose.runtime.Immutable
+import com.comst.model.KaKaoSearchMedia
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.ui.base.BaseEvent
 import com.comst.ui.base.BaseIntent
@@ -14,6 +15,7 @@ class SearchCustomPagingContract {
         val isLoading: Boolean = false,
         val queryValue: String = "",
         val showBackButton: Boolean = false,
+        val mediaSearchList: List<KaKaoSearchMedia> = emptyList(),
         val kaKaoSearchState: KaKaoSearchUiState = KaKaoSearchUiState.IDLE
     ): BaseUIState
 

@@ -5,11 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.comst.ui.util.ThrottleClickHandler
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<S : BaseUIState, A : BaseSideEffect, I : BaseIntent, E : BaseEvent>(
@@ -86,5 +90,13 @@ abstract class BaseViewModel<S : BaseUIState, A : BaseSideEffect, I : BaseIntent
         when (exception) {
 
         }
+    }
+
+    fun <T> Flow<T>.stateInWhileSubscribed(initialValue: T): StateFlow<T> {
+        return stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = initialValue,
+        )
     }
 }
