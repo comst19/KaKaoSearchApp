@@ -3,15 +3,24 @@ package com.comst.search_custom_paging.search
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,13 +33,16 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.comst.designsystem.component.error.ErrorScreen
+import com.comst.designsystem.component.item.MediaSearchCard
 import com.comst.designsystem.component.loading.LoadingWheel
 import com.comst.designsystem.theme.BaseTheme
+import com.comst.display.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.R
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.search_custom_paging.component.KaKaoSearchbar
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingUIState
+import com.comst.ui.extension.OnBottomReached
 
 @Composable
 internal fun SearchCustomPagingScreen(
@@ -38,6 +50,9 @@ internal fun SearchCustomPagingScreen(
     padding: PaddingValues = PaddingValues(),
     setIntent: (SearchCustomPagingIntent) -> Unit = {}
 ){
+
+    val listState = rememberLazyListState()
+
     Column(
         modifier = Modifier.fillMaxSize().padding(padding)
     ) {
@@ -51,7 +66,9 @@ internal fun SearchCustomPagingScreen(
             onQueryChange = { query ->
                 setIntent(SearchCustomPagingIntent.QueryChange(query))
             },
-            onQuery = { },
+            onQuery = {
+                setIntent(SearchCustomPagingIntent.MediaSearch)
+            },
             showBackButton = uiState.showBackButton,
             onBackPress = {
 
@@ -82,7 +99,15 @@ internal fun SearchCustomPagingScreen(
             }
 
             KaKaoSearchUiState.SHOW_RESULT -> {
-
+                KaKaoSearchResultColumn(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                        .weight(1f),
+                    listState = listState,
+                    kaKaoSearchList = uiState.kaKaoSearchList,
+                    setIntent = setIntent
+                )
             }
         }
     }
@@ -130,6 +155,90 @@ private fun KaKaoSearchEmpty() {
         )
     }
 }
+
+@Composable
+private fun KaKaoSearchResultColumn(
+    modifier: Modifier,
+    kaKaoSearchList: List<DisplayKaKaoSearchMedia>,
+    listState: LazyListState = rememberLazyListState(),
+    setIntent: (SearchCustomPagingIntent) -> Unit
+){
+
+    LazyColumn(
+        modifier = modifier,
+        state = listState
+    ) {
+        items(
+            count = kaKaoSearchList.size,
+            key = { index -> index }
+        ){ index ->
+            val mediaItem = kaKaoSearchList[index]
+            var expanded by rememberSaveable { mutableStateOf(false) }
+
+            MediaSearchCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                media = mediaItem,
+                isExpanded = expanded,
+                onClickLink = { },
+                onClickImage = {
+                    expanded = !expanded
+                },
+                onClickFavorite = { },
+            )
+        }
+
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+            ) {
+                /*
+                if (kakaoMediaItemList.pageable) {
+                    KaKaoSearchLoadingItem()
+                } else {
+                    KaKaoSearchLastItem()
+                }
+                */
+
+            }
+        }
+    }
+
+    listState.OnBottomReached(buffer = 0) {
+        setIntent(SearchCustomPagingIntent.NextPage)
+    }
+}
+
+@Composable
+private fun ColumnScope.KaKaoSearchLoadingItem() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .padding(8.dp)
+            .align(Alignment.CenterHorizontally)
+    )
+    Text(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        text = stringResource(id = R.string.kakao_search_media_item_loading),
+    )
+}
+
+@Composable
+private fun KaKaoSearchLastItem() {
+    Text(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        text = stringResource(id = R.string.kakao_search_media_item_last),
+    )
+}
+
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

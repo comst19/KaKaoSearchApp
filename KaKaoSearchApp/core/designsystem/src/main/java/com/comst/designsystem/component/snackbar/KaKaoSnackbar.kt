@@ -107,7 +107,7 @@ private fun KaKaoSnackbarContent(
 
 @Preview
 @Composable
-fun BaseSnackbarPreview() {
+fun KaKaSnackbarPreview() {
     BaseTheme {
         Column {
             KaKaoSnackbarContent(message = "This is a snackbar")
