@@ -11,10 +11,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.comst.favorite_shared_preferences.favorite.navigateFavoriteSharedPreferences
 import com.comst.favorite_shared_preferences.navigation.FavoriteSharedPreferencesRoute
-import com.comst.home.main.navigateHome
 import com.comst.home.navigation.HomeRoute
+import com.comst.home.navigation.navigateHome
 import com.comst.search_custom_paging.navigation.SearchCustomPagingRoute
-import com.comst.search_custom_paging.search.navigateSearchCustomPaging
+import com.comst.search_custom_paging.navigation.navigateSearchCustomPaging
 import com.comst.signin.navigation.SignInRoute
 import com.comst.signin.navigation.navigateSignIn
 import com.comst.signin.navigation.navigateSignUp

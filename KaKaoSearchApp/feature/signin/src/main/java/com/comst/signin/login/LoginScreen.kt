@@ -20,40 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.signin.login.LoginContract.*
-import com.comst.ui.SnackbarToken
-import com.comst.ui.extension.collectAsStateWithLifecycle
-import com.comst.ui.extension.collectWithLifecycle
+import com.comst.signin.login.LoginContract.LoginIntent
+import com.comst.signin.login.LoginContract.LoginUIState
 import kotlinx.coroutines.delay
 
 @Composable
-fun LoginRoute(
-    viewModel: LoginViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit,
-    onShowSnackBar: (SnackbarToken) -> Unit
-
-) {
-
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    viewModel.effect.collectWithLifecycle { effect ->
-        when(effect){
-            is LoginSideEffect.NavigateToHome -> navigateToHome()
-            is LoginSideEffect.NavigateToSignUp -> navigateToSignUp()
-        }
-    }
-
-    LoginScreen(
-        uiState = uiState,
-        setIntent = viewModel::setIntent
-    )
-}
-
-@Composable
-private fun LoginScreen(
+internal fun LoginScreen(
     uiState: LoginUIState = LoginUIState(),
     setIntent: (LoginIntent) -> Unit = {}
 ) {

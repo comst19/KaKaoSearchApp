@@ -19,53 +19,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.comst.designsystem.component.error.ErrorScreen
 import com.comst.designsystem.component.loading.LoadingWheel
-import com.comst.search_custom_paging.component.KaKaoSearchUiState
-import com.comst.search_custom_paging.component.KaKaoSearchbar
 import com.comst.designsystem.theme.BaseTheme
 import com.comst.search_custom_paging.R
-import com.comst.search_custom_paging.navigation.SearchCustomPagingRoute
+import com.comst.search_custom_paging.component.KaKaoSearchUiState
+import com.comst.search_custom_paging.component.KaKaoSearchbar
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingUIState
-import com.comst.ui.SnackbarToken
-import com.comst.ui.extension.collectAsStateWithLifecycle
-import com.comst.ui.extension.collectWithLifecycle
-
-fun NavController.navigateSearchCustomPaging(navOptions: NavOptions) {
-    navigate(SearchCustomPagingRoute.defaultRoute,navOptions)
-}
 
 @Composable
-fun SearchCustomPagingRoute(
-    viewModel: SearchCustomPagingViewModel = hiltViewModel(),
-    padding: PaddingValues,
-    onShowSnackBar: (SnackbarToken) -> Unit
-){
-
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    viewModel.effect.collectWithLifecycle { effect ->
-
-    }
-
-    SearchCustomPagingScreen(
-        uiState = uiState,
-        padding = padding,
-        setIntent = viewModel::setIntent
-    )
-
-}
-
-@Composable
-fun SearchCustomPagingScreen(
+internal fun SearchCustomPagingScreen(
     uiState: SearchCustomPagingUIState = SearchCustomPagingUIState(),
     padding: PaddingValues = PaddingValues(),
     setIntent: (SearchCustomPagingIntent) -> Unit = {}

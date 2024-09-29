@@ -12,44 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.comst.designsystem.theme.BaseTheme
 import com.comst.home.main.HomeMainContract.HomeMainIntent
-import com.comst.home.main.HomeMainContract.HomeMainSideEffect
 import com.comst.home.main.HomeMainContract.HomeMainUIState
-import com.comst.home.navigation.HomeRoute
-import com.comst.ui.SnackbarToken
-import com.comst.ui.extension.collectAsStateWithLifecycle
-import com.comst.ui.extension.collectWithLifecycle
-
-fun NavController.navigateHome(navOptions: NavOptions) {
-    navigate(HomeRoute.defaultRoute,navOptions)
-}
 
 @Composable
-fun HomeMainRoute(
-    viewModel: HomeMainViewModel = hiltViewModel(),
-    padding: PaddingValues,
-    onShowSnackBar: (SnackbarToken) -> Unit
-) {
-
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    viewModel.effect.collectWithLifecycle { effect ->
-
-    }
-    HomeMainScreen(
-        uiState = uiState,
-        padding = padding,
-        setIntent = viewModel::setIntent
-    )
-}
-
-
-@Composable
-private fun HomeMainScreen(
+internal fun HomeMainScreen(
     uiState: HomeMainUIState = HomeMainUIState(),
     padding: PaddingValues = PaddingValues(),
     setIntent: (HomeMainIntent) -> Unit = {}

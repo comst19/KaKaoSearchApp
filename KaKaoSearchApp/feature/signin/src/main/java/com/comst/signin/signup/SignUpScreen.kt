@@ -32,31 +32,7 @@ import com.comst.ui.extension.collectWithLifecycle
 import kotlinx.coroutines.delay
 
 @Composable
-fun SignUpRoute(
-    viewModel: SignUpViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit,
-    onBackClick: () -> Unit,
-    onShowSnackBar: (SnackbarToken) -> Unit
-) {
-
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    viewModel.effect.collectWithLifecycle { effect ->
-        when (effect) {
-            is SignUpSideEffect.NavigateBack -> onBackClick()
-            is SignUpSideEffect.NavigateToHome -> navigateToHome()
-        }
-    }
-
-
-    SignUpScreen(
-        uiState = uiState,
-        setIntent = viewModel::setIntent
-    )
-}
-
-@Composable
-private fun SignUpScreen(
+internal fun SignUpScreen(
     uiState: SignUpUIState = SignUpUIState(),
     setIntent: (SignUpIntent) -> Unit = {}
 ) {

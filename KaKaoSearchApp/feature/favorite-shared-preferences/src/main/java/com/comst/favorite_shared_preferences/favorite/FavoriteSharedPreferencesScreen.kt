@@ -12,42 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.favorite_shared_preferences.favorite.FavoriteSharedPreferencesContract.*
-import com.comst.favorite_shared_preferences.navigation.FavoriteSharedPreferencesRoute
-import com.comst.ui.SnackbarToken
-import com.comst.ui.extension.collectAsStateWithLifecycle
-import com.comst.ui.extension.collectWithLifecycle
-
-fun NavController.navigateFavoriteSharedPreferences(navOptions: NavOptions) {
-    navigate(FavoriteSharedPreferencesRoute.defaultRoute,navOptions)
-}
+import com.comst.favorite_shared_preferences.favorite.FavoriteSharedPreferencesContract.FavoriteSharedPreferencesIntent
+import com.comst.favorite_shared_preferences.favorite.FavoriteSharedPreferencesContract.FavoriteSharedPreferencesUIState
 
 @Composable
-fun FavoriteSharedPreferencesRoute(
-    viewModel: FavoriteSharedPreferencesViewModel = hiltViewModel(),
-    padding: PaddingValues,
-    onShowSnackBar: (SnackbarToken) -> Unit
-){
-
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    viewModel.effect.collectWithLifecycle { effect ->
-
-    }
-
-    FavoriteSharedPreferencesScreen(
-        uiState = uiState,
-        padding = padding,
-        setIntent = viewModel::setIntent
-    )
-}
-
-@Composable
-fun FavoriteSharedPreferencesScreen(
+internal fun FavoriteSharedPreferencesScreen(
     uiState: FavoriteSharedPreferencesUIState = FavoriteSharedPreferencesUIState(),
     padding: PaddingValues = PaddingValues(),
     setIntent: (FavoriteSharedPreferencesIntent) -> Unit = {}
