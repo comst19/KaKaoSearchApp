@@ -1,4 +1,4 @@
-package com.comst.designsystem.component.item
+package com.comst.search_custom_paging.component
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
@@ -49,13 +49,11 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.comst.designsystem.R
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.display.DisplayKaKaoSearchMedia
 import com.comst.model.KaKaoSearchMedia
 import com.comst.model.KaKaoSearchMediaType
-import java.text.SimpleDateFormat
+import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 @Composable

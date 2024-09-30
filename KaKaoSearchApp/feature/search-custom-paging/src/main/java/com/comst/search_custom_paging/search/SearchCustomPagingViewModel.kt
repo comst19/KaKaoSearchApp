@@ -1,9 +1,9 @@
 package com.comst.search_custom_paging.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
-import com.comst.domain.util.DomainResult
+import androidx.paging.map
+import com.comst.search_custom_paging.model.toDisplayKaKaoSearchMedia
+import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchPagingUseCase
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
@@ -11,13 +11,13 @@ import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCu
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingUIState
 import com.comst.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchCustomPagingViewModel @Inject constructor(
-    private val getKaKaoMediaSearchSortedUseCase: GetKaKaoMediaSearchSortedUseCase,
+    private val getKaKaoMediaSearchPagingUseCase: GetKaKaoMediaSearchPagingUseCase
 ) : BaseViewModel<SearchCustomPagingUIState, SearchCustomPagingSideEffect, SearchCustomPagingIntent, SearchCustomPagingEvent>(
     SearchCustomPagingUIState()
 ) {
@@ -26,10 +26,14 @@ class SearchCustomPagingViewModel @Inject constructor(
         when (intent) {
             is SearchCustomPagingIntent.QueryChange -> onQueryChange(intent.query)
             is SearchCustomPagingIntent.MediaSearch -> {
-                getKaKaoMediaSearchSortedUseCase.resetState()
+                setState {
+                    copy(
+                        kaKaoSearchState = KaKaoSearchUiState.LOADING
+                    )
+                }
                 onMediaSearch()
             }
-            is SearchCustomPagingIntent.NextPage -> onNextPage()
+            is SearchCustomPagingIntent.NextPage -> onMediaSearch()
         }
     }
 
@@ -46,36 +50,27 @@ class SearchCustomPagingViewModel @Inject constructor(
     }
 
     private fun onMediaSearch() = viewModelScope.launch {
-        setState {
-            copy(
-                kaKaoSearchState = KaKaoSearchUiState.LOADING
-            )
-        }
-        getKaKaoMediaSearchSortedUseCase(
+        getKaKaoMediaSearchPagingUseCase(
             query = currentState.queryValue
-        ).collectLatest { domainResult ->
-            when(domainResult){
-                is DomainResult.Success -> {
-                    val searchData = domainResult.data
-                    setState {
-                        copy(
-                            kaKaoSearchList = kaKaoSearchList + searchData,
-                            kaKaoSearchState = if (searchData.isNotEmpty()) KaKaoSearchUiState.SHOW_RESULT else KaKaoSearchUiState.EMPTY
-                        )
-                    }
-                }
-                is DomainResult.Failure -> {
-                    setState {
-                        copy(
-                            kaKaoSearchState = KaKaoSearchUiState.ERROR
-                        )
-                    }
+        ).onSuccess { searchMediaFlow ->
+            val displayKaKaoSearchMediaFlow = searchMediaFlow.map { pagingData ->
+                pagingData.map{ media ->
+                    media.toDisplayKaKaoSearchMedia()
                 }
             }
-        }
-    }
 
-    private fun onNextPage(){
-        onMediaSearch()
+            setState {
+                copy(
+                    kaKaoSearchState = KaKaoSearchUiState.SHOW_RESULT,
+                    kaKaoSearchMedia = displayKaKaoSearchMediaFlow
+                )
+            }
+        }.onFailure {
+            setState {
+                copy(
+                    kaKaoSearchState = KaKaoSearchUiState.ERROR
+                )
+            }
+        }
     }
 }

@@ -1,23 +1,17 @@
 package com.comst.domain.repository
 
+import androidx.paging.PagingData
 import com.comst.domain.util.DomainResult
 import com.comst.model.KaKaoSearch
+import com.comst.model.KaKaoSearchMediaModel
 import kotlinx.coroutines.flow.Flow
 
 interface KaKaoSearchRepository {
-    suspend fun getKaKaoImageSearchList(
-        query: String,
-        sort: KaKaoSearchSortType,
-        page: Int,
-        size: Int
-    ): Flow<DomainResult<KaKaoSearch>>
 
-    suspend fun getKaKaoVideoSearchList(
+    suspend fun getKaKaoImageSearchPagingList(
         query: String,
         sort: KaKaoSearchSortType,
-        page: Int,
-        size: Int
-    ): Flow<DomainResult<KaKaoSearch>>
+    ): Flow<PagingData<KaKaoSearchMediaModel>>
 }
 
 enum class KaKaoSearchSortType(val value: String) {

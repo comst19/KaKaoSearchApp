@@ -19,10 +19,10 @@ fun LazyListState.OnBottomReached(
     val shouldLoadMore = remember {
         derivedStateOf {
             val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
-
             lastVisibleItem.index >= layoutInfo.totalItemsCount - 1 - buffer
         }
     }
+
     LaunchedEffect(shouldLoadMore) {
         snapshotFlow { shouldLoadMore.value }
             .collectLatest {

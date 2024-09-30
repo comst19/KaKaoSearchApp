@@ -17,8 +17,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,30 +30,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.comst.designsystem.component.error.ErrorScreen
-import com.comst.designsystem.component.item.MediaSearchCard
+import com.comst.search_custom_paging.component.MediaSearchCard
 import com.comst.designsystem.component.loading.LoadingWheel
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.display.DisplayKaKaoSearchMedia
+import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.R
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.search_custom_paging.component.KaKaoSearchbar
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingUIState
 import com.comst.ui.extension.OnBottomReached
+import com.comst.ui.extension.isScrolledToEnd
 
 @Composable
 internal fun SearchCustomPagingScreen(
     uiState: SearchCustomPagingUIState = SearchCustomPagingUIState(),
     padding: PaddingValues = PaddingValues(),
+    listState: LazyListState = rememberLazyListState(),
     setIntent: (SearchCustomPagingIntent) -> Unit = {}
 ){
 
-    val listState = rememberLazyListState()
+    val mediaList: LazyPagingItems<DisplayKaKaoSearchMedia> = uiState.kaKaoSearchMedia.collectAsLazyPagingItems()
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding)
@@ -80,10 +86,6 @@ internal fun SearchCustomPagingScreen(
                 KaKaoSearchIdleColumn()
             }
 
-            KaKaoSearchUiState.LOADING -> {
-                LoadingWheel()
-            }
-
             KaKaoSearchUiState.EMPTY -> {
                 KaKaoSearchEmpty()
             }
@@ -98,6 +100,10 @@ internal fun SearchCustomPagingScreen(
                 )
             }
 
+            KaKaoSearchUiState.LOADING -> {
+                LoadingWheel()
+            }
+
             KaKaoSearchUiState.SHOW_RESULT -> {
                 KaKaoSearchResultColumn(
                     modifier = Modifier
@@ -105,7 +111,7 @@ internal fun SearchCustomPagingScreen(
                         .fillMaxWidth()
                         .weight(1f),
                     listState = listState,
-                    kaKaoSearchList = uiState.kaKaoSearchList,
+                    mediaList = mediaList,
                     setIntent = setIntent
                 )
             }
@@ -159,34 +165,39 @@ private fun KaKaoSearchEmpty() {
 @Composable
 private fun KaKaoSearchResultColumn(
     modifier: Modifier,
-    kaKaoSearchList: List<DisplayKaKaoSearchMedia>,
+    mediaList: LazyPagingItems<DisplayKaKaoSearchMedia>,
     listState: LazyListState = rememberLazyListState(),
     setIntent: (SearchCustomPagingIntent) -> Unit
 ){
+    val onReachedBottom by remember {
+        derivedStateOf {
+            listState.isScrolledToEnd()
+        }
+    }
 
     LazyColumn(
         modifier = modifier,
         state = listState
     ) {
         items(
-            count = kaKaoSearchList.size,
+            count = mediaList.itemCount,
             key = { index -> index }
         ){ index ->
-            val mediaItem = kaKaoSearchList[index]
-            var expanded by rememberSaveable { mutableStateOf(false) }
-
-            MediaSearchCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                media = mediaItem,
-                isExpanded = expanded,
-                onClickLink = { },
-                onClickImage = {
-                    expanded = !expanded
-                },
-                onClickFavorite = { },
-            )
+            mediaList[index]?.run {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+                MediaSearchCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    media = this,
+                    isExpanded = expanded,
+                    onClickLink = { },
+                    onClickImage = {
+                        expanded = !expanded
+                    },
+                    onClickFavorite = { },
+                )
+            }
         }
 
         item {
@@ -195,19 +206,16 @@ private fun KaKaoSearchResultColumn(
                     .fillMaxWidth()
                     .height(140.dp)
             ) {
-                /*
-                if (kakaoMediaItemList.pageable) {
-                    KaKaoSearchLoadingItem()
-                } else {
+                if (onReachedBottom) {
                     KaKaoSearchLastItem()
+                } else {
+                    KaKaoSearchLoadingItem()
                 }
-                */
-
             }
         }
     }
 
-    listState.OnBottomReached(buffer = 0) {
+    listState.OnBottomReached(buffer = 20) {
         setIntent(SearchCustomPagingIntent.NextPage)
     }
 }

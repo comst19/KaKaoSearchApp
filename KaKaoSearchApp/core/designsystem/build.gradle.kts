@@ -9,7 +9,6 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
-    implementation(projects.core.model)
     implementation (libs.accompanist.systemuicontroller)
     implementation(libs.coil.compose)
     implementation(libs.lottie)

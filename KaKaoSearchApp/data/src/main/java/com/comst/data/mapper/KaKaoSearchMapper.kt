@@ -1,38 +1,24 @@
 package com.comst.data.mapper
 
-import com.comst.data.dto.kakao.search.response.KaKaoImageSearchResponse
-import com.comst.data.dto.kakao.search.response.KaKaoVideoSearchResponse
-import com.comst.model.KaKaoSearch
+import com.comst.data.dto.kakao.search.response.KaKaoImageSearchDocument
 import com.comst.model.KaKaoSearchMedia
+import com.comst.model.KaKaoSearchMediaModel
 import com.comst.model.KaKaoSearchMediaType
 
 object KaKaoSearchMapper {
 
-    internal fun KaKaoImageSearchResponse.toDomainModel() = KaKaoSearch(
-        isEnd = meta.isEnd,
-        itemList = documents.map { item ->
-            KaKaoSearchMedia(
-                title = item.siteName,
-                url = item.url,
-                originalUrl = item.imageUrl,
-                thumbnailUrl = item.thumbnailUrl,
-                dateTime = item.datetime,
-                mediaType = KaKaoSearchMediaType.IMAGE
-            )
-        }
+    internal fun KaKaoImageSearchDocument.toKaKaoSearchMediaModel() = KaKaoSearchMediaModel(
+        isFavorite = false,
+        media = this.toKaKaoSearchMedia()
     )
 
-    internal fun KaKaoVideoSearchResponse.toDomainModel() = KaKaoSearch(
-        isEnd = meta.isEnd,
-        itemList = documents.map { item ->
-            KaKaoSearchMedia(
-                title = item.title,
-                url = item.url,
-                thumbnailUrl = item.thumbnailUrl,
-                dateTime = item.datetime,
-                mediaType = KaKaoSearchMediaType.VIDEO
-            )
-        }
+    private fun KaKaoImageSearchDocument.toKaKaoSearchMedia() = KaKaoSearchMedia(
+        title = this.siteName,
+        url = this.url,
+        originalUrl = this.imageUrl,
+        thumbnailUrl = this.thumbnailUrl,
+        dateTime = this.datetime,
+        mediaType = KaKaoSearchMediaType.IMAGE
     )
 
 }

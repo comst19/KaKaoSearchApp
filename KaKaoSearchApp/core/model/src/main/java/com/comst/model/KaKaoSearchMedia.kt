@@ -7,6 +7,11 @@ data class KaKaoSearch(
     val itemList: List<KaKaoSearchMedia>,
 )
 
+data class KaKaoSearchMediaModel(
+    val isFavorite: Boolean,
+    val media: KaKaoSearchMedia
+)
+
 data class KaKaoSearchMedia(
     val title: String,
     val url: String,

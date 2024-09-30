@@ -1,6 +1,7 @@
 package com.comst.search_custom_paging.search
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.comst.ui.SnackbarToken
@@ -15,6 +16,7 @@ fun SearchCustomPagingRoute(
 ){
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val listState = rememberLazyListState()
 
     viewModel.effect.collectWithLifecycle { effect ->
 
@@ -23,6 +25,7 @@ fun SearchCustomPagingRoute(
     SearchCustomPagingScreen(
         uiState = uiState,
         padding = padding,
+        listState = listState,
         setIntent = viewModel::setIntent
     )
 
