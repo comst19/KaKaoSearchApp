@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.comst.data.mapper.KaKaoSearchMapper.toKaKaoSearchMediaModel
 import com.comst.data.repository.kakao.search.remote.KaKaoImageSearchPagingSourceImpl
 import com.comst.data.repository.kakao.search.remote.KaKaoSearchRemoteDataSource
+import com.comst.data.repository.kakao.search.remote.KaKaoVideoSearchPagingSourceImpl
 import com.comst.domain.repository.KaKaoSearchRepository
 import com.comst.domain.repository.KaKaoSearchSortType
 import com.comst.model.KaKaoSearchMediaModel
@@ -27,6 +28,26 @@ class KaKaoSearchRepositoryImpl @Inject constructor(
             config = PagingConfig(pageSize = IMAGE_PAGE_SIZE, prefetchDistance = 2),
             pagingSourceFactory = {
                 KaKaoImageSearchPagingSourceImpl(
+                    kaKaoSearchRemoteDataSource = kaKaoSearchRemoteDataSource,
+                    query = query,
+                    sort = sort.value,
+                )
+            }
+        ).flow.map { pagingData ->
+            pagingData.map { document ->
+                document.toKaKaoSearchMediaModel()
+            }
+        }
+    }
+
+    override suspend fun getKaKaoVideoSearchPagingList(
+        query: String,
+        sort: KaKaoSearchSortType,
+    ): Flow<PagingData<KaKaoSearchMediaModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = VIDEO_PAGE_SIZE, prefetchDistance = 2),
+            pagingSourceFactory = {
+                KaKaoVideoSearchPagingSourceImpl(
                     kaKaoSearchRemoteDataSource = kaKaoSearchRemoteDataSource,
                     query = query,
                     sort = sort.value,

@@ -46,6 +46,5 @@ class KaKaoImageSearchPagingSourceImpl @Inject constructor(
 
     companion object {
         private const val IMAGE_PAGE_LIMIT = 50
-        private const val VIDEO_PAGE_LIMIT = 15
     }
 }

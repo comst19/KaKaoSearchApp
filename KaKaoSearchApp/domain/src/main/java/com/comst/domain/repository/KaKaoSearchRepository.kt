@@ -12,6 +12,11 @@ interface KaKaoSearchRepository {
         query: String,
         sort: KaKaoSearchSortType,
     ): Flow<PagingData<KaKaoSearchMediaModel>>
+
+    suspend fun getKaKaoVideoSearchPagingList(
+        query: String,
+        sort: KaKaoSearchSortType,
+    ): Flow<PagingData<KaKaoSearchMediaModel>>
 }
 
 enum class KaKaoSearchSortType(val value: String) {
