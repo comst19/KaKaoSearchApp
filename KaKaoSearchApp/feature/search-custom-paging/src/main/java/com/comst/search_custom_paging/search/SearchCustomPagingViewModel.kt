@@ -4,20 +4,26 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.map
 import com.comst.search_custom_paging.model.toDisplayKaKaoSearchMedia
 import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchPagingUseCase
+import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
+import com.comst.domain.util.onFailure
+import com.comst.domain.util.onSuccess
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
+import com.comst.search_custom_paging.model.SearchState
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingSideEffect
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingUIState
 import com.comst.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchCustomPagingViewModel @Inject constructor(
-    private val getKaKaoMediaSearchPagingUseCase: GetKaKaoMediaSearchPagingUseCase
+    private val getKaKaoMediaSearchPagingUseCase: GetKaKaoMediaSearchPagingUseCase,
+    private val getKaKaoMediaSearchSortedUseCase: GetKaKaoMediaSearchSortedUseCase,
 ) : BaseViewModel<SearchCustomPagingUIState, SearchCustomPagingSideEffect, SearchCustomPagingIntent, SearchCustomPagingEvent>(
     SearchCustomPagingUIState()
 ) {
@@ -25,15 +31,9 @@ class SearchCustomPagingViewModel @Inject constructor(
     override fun handleIntent(intent: SearchCustomPagingIntent) {
         when (intent) {
             is SearchCustomPagingIntent.QueryChange -> onQueryChange(intent.query)
-            is SearchCustomPagingIntent.MediaSearch -> {
-                setState {
-                    copy(
-                        kaKaoSearchState = KaKaoSearchUiState.LOADING
-                    )
-                }
-                onMediaSearch()
-            }
-            is SearchCustomPagingIntent.NextPage -> onMediaSearch()
+            is SearchCustomPagingIntent.MediaSearch -> onMediaSearchResult(true)
+            is SearchCustomPagingIntent.Refresh -> onMediaSearchResult(true)
+            is SearchCustomPagingIntent.NextPage -> onMediaSearchResult(false)
         }
     }
 
@@ -54,7 +54,7 @@ class SearchCustomPagingViewModel @Inject constructor(
             query = currentState.queryValue
         ).onSuccess { searchMediaFlow ->
             val displayKaKaoSearchMediaFlow = searchMediaFlow.map { pagingData ->
-                pagingData.map{ media ->
+                pagingData.map { media ->
                     media.toDisplayKaKaoSearchMedia()
                 }
             }
@@ -70,6 +70,43 @@ class SearchCustomPagingViewModel @Inject constructor(
                 copy(
                     kaKaoSearchState = KaKaoSearchUiState.ERROR
                 )
+            }
+        }
+    }
+
+    private fun onMediaSearchResult(refresh: Boolean) = viewModelScope.launch {
+        if (refresh){
+            setState {
+                copy(
+                    kaKaoSearchState = KaKaoSearchUiState.LOADING,
+                    isRefreshing = true
+                )
+            }
+        }
+        getKaKaoMediaSearchSortedUseCase(
+            query = currentState.queryValue,
+            refresh = refresh
+        ).collectLatest { result ->
+            result.onSuccess { searchDomainModel ->
+                setState {
+                    copy(
+                        searchState = SearchState(
+                            query = currentState.queryValue,
+                            pageable = searchDomainModel.isEnd,
+                            mediaList = searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() }
+                        ),
+                        kaKaoSearchState = KaKaoSearchUiState.SHOW_RESULT,
+                        isRefreshing = false
+                    )
+                }
+                searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() }
+            }.onFailure {
+                setState {
+                    copy(
+                        kaKaoSearchState = KaKaoSearchUiState.ERROR,
+                        isRefreshing = false
+                    )
+                }
             }
         }
     }

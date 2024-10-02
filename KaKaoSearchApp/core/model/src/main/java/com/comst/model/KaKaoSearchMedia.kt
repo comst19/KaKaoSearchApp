@@ -2,6 +2,16 @@ package com.comst.model
 
 import java.time.ZonedDateTime
 
+data class KaKaoSearchResultDomainModel(
+    val isEnd: Boolean,
+    val itemList: List<KaKaoSearchContentModel>,
+)
+
+data class KaKaoSearchContentModel(
+    val isFavorite: Boolean,
+    val media: KaKaoSearchMedia
+)
+
 data class KaKaoSearch(
     val isEnd: Boolean,
     val itemList: List<KaKaoSearchMedia>,

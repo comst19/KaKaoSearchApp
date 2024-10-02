@@ -4,13 +4,17 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.comst.data.mapper.KaKaoSearchMapper.toDomainModel
 import com.comst.data.mapper.KaKaoSearchMapper.toKaKaoSearchMediaModel
+import com.comst.data.network.mapToDomainResult
 import com.comst.data.repository.kakao.search.remote.KaKaoImageSearchPagingSourceImpl
 import com.comst.data.repository.kakao.search.remote.KaKaoSearchRemoteDataSource
 import com.comst.data.repository.kakao.search.remote.KaKaoVideoSearchPagingSourceImpl
 import com.comst.domain.repository.KaKaoSearchRepository
 import com.comst.domain.repository.KaKaoSearchSortType
+import com.comst.domain.util.DomainResult
 import com.comst.model.KaKaoSearchMediaModel
+import com.comst.model.KaKaoSearchResultDomainModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -19,6 +23,24 @@ import javax.inject.Inject
 class KaKaoSearchRepositoryImpl @Inject constructor(
     private val kaKaoSearchRemoteDataSource: KaKaoSearchRemoteDataSource
 ) : KaKaoSearchRepository {
+
+    override suspend fun getKaKaoImageSearchList(
+        query: String,
+        sort: KaKaoSearchSortType,
+        page: Int,
+        size: Int
+    ): Flow<DomainResult<KaKaoSearchResultDomainModel>> = kaKaoSearchRemoteDataSource
+        .getKaKaoImageSearch(query, sort.toString(), page, size)
+        .mapToDomainResult { it.toDomainModel() }
+
+    override suspend fun getKaKaoVideoSearchList(
+        query: String,
+        sort: KaKaoSearchSortType,
+        page: Int,
+        size: Int
+    ): Flow<DomainResult<KaKaoSearchResultDomainModel>> = kaKaoSearchRemoteDataSource
+        .getKaKaoVideoSearch(query, sort.toString(), page, size)
+        .mapToDomainResult { it.toDomainModel() }
 
     override suspend fun getKaKaoImageSearchPagingList(
         query: String,
@@ -61,8 +83,8 @@ class KaKaoSearchRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val IMAGE_PAGE_SIZE = 25
-        private const val VIDEO_PAGE_SIZE = 10
+        private const val IMAGE_PAGE_SIZE = 1
+        private const val VIDEO_PAGE_SIZE = 1
     }
 }
 
