@@ -30,7 +30,7 @@ class KaKaoSearchRepositoryImpl @Inject constructor(
         page: Int,
         size: Int
     ): Flow<DomainResult<KaKaoSearchResultDomainModel>> = kaKaoSearchRemoteDataSource
-        .getKaKaoImageSearch(query, sort.toString(), page, size)
+        .getKaKaoImageSearch(query, sort.value, page, size)
         .mapToDomainResult { it.toDomainModel() }
 
     override suspend fun getKaKaoVideoSearchList(
@@ -39,7 +39,7 @@ class KaKaoSearchRepositoryImpl @Inject constructor(
         page: Int,
         size: Int
     ): Flow<DomainResult<KaKaoSearchResultDomainModel>> = kaKaoSearchRemoteDataSource
-        .getKaKaoVideoSearch(query, sort.toString(), page, size)
+        .getKaKaoVideoSearch(query, sort.value, page, size)
         .mapToDomainResult { it.toDomainModel() }
 
     override suspend fun getKaKaoImageSearchPagingList(
