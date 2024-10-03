@@ -34,7 +34,7 @@ fun <T> PullToRefreshLazyColumn(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState()
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
     val onReachedBottom by remember {
@@ -71,11 +71,19 @@ fun <T> PullToRefreshLazyColumn(
             }
         }
 
+        if (pullToRefreshState.isRefreshing || pullToRefreshState.progress > 0) {
+            PullToRefreshContainer(
+                state = pullToRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+
         if (pullToRefreshState.isRefreshing) {
             LaunchedEffect(true) {
                 onRefresh()
             }
         }
+
 
         LaunchedEffect(isRefreshing) {
             if (isRefreshing) {
@@ -88,10 +96,5 @@ fun <T> PullToRefreshLazyColumn(
         lazyListState.OnBottomReached(buffer = 20) {
             onLoadMore()
         }
-
-        PullToRefreshContainer(
-            state = pullToRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
     }
 }
