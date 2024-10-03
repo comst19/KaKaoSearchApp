@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
 import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
-import com.comst.search_custom_paging.model.SearchState
 import com.comst.ui.base.BaseEvent
 import com.comst.ui.base.BaseIntent
 import com.comst.ui.base.BaseSideEffect
@@ -20,11 +19,6 @@ class SearchCustomPagingContract {
         val showBackButton: Boolean = false,
         val kaKaoSearchMedia: Flow<PagingData<DisplayKaKaoSearchMedia>> = emptyFlow(),
         val kaKaoSearchList: List<DisplayKaKaoSearchMedia> = emptyList(),
-        val searchState: SearchState = SearchState(
-            query = "",
-            pageable = false,
-            mediaList = listOf()
-        ),
         val isRefreshing: Boolean = false,
         val kaKaoSearchState: KaKaoSearchUiState = KaKaoSearchUiState.IDLE
     ): BaseUIState

@@ -132,7 +132,7 @@ internal fun SearchCustomPagingScreen(
 
                 KaKaoSearchResultCustomPagingColumnPull(
                     modifier = Modifier,
-                    kaKaoSearchList = uiState.searchState.mediaList,
+                    kaKaoSearchList = uiState.kaKaoSearchList,
                     isRefreshing = uiState.isRefreshing,
                     lazyListState = listState,
                     setIntent = setIntent

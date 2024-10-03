@@ -22,7 +22,7 @@ private const val VideoPageSize = 30
 data class MediaSearchState(
     var pageable: Boolean = true,
     var nextPage: Int = 1,
-    var mediaList: MutableList<KaKaoSearchContentModel> = mutableListOf(),
+    var newMediaList: MutableList<KaKaoSearchContentModel> = mutableListOf(),
     var apiFlow: Flow<DomainResult<KaKaoSearchResultDomainModel>> = emptyFlow()
 )
 
@@ -72,7 +72,7 @@ class GetKaKaoMediaSearchSortedUseCase @Inject constructor(
                 imageSearchState = imageSearchState.copy(
                     pageable = !imageSearchResult.data.isEnd,
                     nextPage = imageSearchState.nextPage + 1,
-                    mediaList = (imageSearchState.mediaList + imageSearchResult.data.itemList).toMutableList()
+                    newMediaList = imageSearchResult.data.itemList.toMutableList()
                 )
             } else if (imageSearchResult is DomainResult.Failure) {
                 imageSearchState = imageSearchState.copy(pageable = false)
@@ -82,13 +82,12 @@ class GetKaKaoMediaSearchSortedUseCase @Inject constructor(
                 videoSearchState = videoSearchState.copy(
                     pageable = !videoSearchResult.data.isEnd,
                     nextPage = videoSearchState.nextPage + 1,
-                    mediaList = (videoSearchState.mediaList + videoSearchResult.data.itemList).toMutableList()
+                    newMediaList = videoSearchResult.data.itemList.toMutableList()
                 )
             } else if (videoSearchResult is DomainResult.Failure) {
                 videoSearchState = videoSearchState.copy(pageable = false)
             }
-
-            val combinedMediaList = imageSearchState.mediaList + videoSearchState.mediaList
+            val combinedMediaList =  imageSearchState.newMediaList + videoSearchState.newMediaList
             val hasNextPage = imageSearchState.pageable || videoSearchState.pageable
 
             val kaKaoSearchResultDomainModel = KaKaoSearchResultDomainModel(

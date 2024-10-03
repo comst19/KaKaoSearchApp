@@ -8,7 +8,6 @@ import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
 import com.comst.domain.util.onFailure
 import com.comst.domain.util.onSuccess
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
-import com.comst.search_custom_paging.model.SearchState
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingSideEffect
@@ -78,6 +77,7 @@ class SearchCustomPagingViewModel @Inject constructor(
         if (refresh){
             setState {
                 copy(
+                    kaKaoSearchList = emptyList(),
                     kaKaoSearchState = KaKaoSearchUiState.LOADING,
                     isRefreshing = true
                 )
@@ -90,11 +90,7 @@ class SearchCustomPagingViewModel @Inject constructor(
             result.onSuccess { searchDomainModel ->
                 setState {
                     copy(
-                        searchState = SearchState(
-                            query = currentState.queryValue,
-                            pageable = searchDomainModel.isEnd,
-                            mediaList = searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() }
-                        ),
+                        kaKaoSearchList = currentState.kaKaoSearchList + searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() },
                         kaKaoSearchState = KaKaoSearchUiState.SHOW_RESULT,
                         isRefreshing = false
                     )
