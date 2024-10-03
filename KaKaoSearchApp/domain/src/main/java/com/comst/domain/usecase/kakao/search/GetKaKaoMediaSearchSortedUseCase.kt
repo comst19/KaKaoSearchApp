@@ -96,7 +96,6 @@ class GetKaKaoMediaSearchSortedUseCase @Inject constructor(
                 itemList = combinedMediaList
             )
 
-            // 성공 또는 실패 결과 처리
             val combinedResult = when {
                 imageSearchResult is DomainResult.Success && videoSearchResult is DomainResult.Success -> {
                     DomainResult.Success(kaKaoSearchResultDomainModel)
@@ -113,15 +112,13 @@ class GetKaKaoMediaSearchSortedUseCase @Inject constructor(
                 else -> DomainResult.Failure(UnknownException())
             }
 
-            // 최종 결과 방출
             emit(combinedResult)
         }
     }
 
-    // 상태 초기화
     fun resetState() {
         imageSearchState = MediaSearchState()
         videoSearchState = MediaSearchState()
-        currentQuery = "" // 검색어도 초기화
+        currentQuery = ""
     }
 }
