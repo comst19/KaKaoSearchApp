@@ -32,6 +32,7 @@ class SearchCustomPagingContract {
         data object MediaSearch: SearchCustomPagingIntent
         data object Refresh: SearchCustomPagingIntent
         data object NextPage: SearchCustomPagingIntent
+        data class ToggleFavorite(val displayKaKaoSearchMedia: DisplayKaKaoSearchMedia): SearchCustomPagingIntent
     }
 
     sealed interface SearchCustomPagingEvent: BaseEvent {

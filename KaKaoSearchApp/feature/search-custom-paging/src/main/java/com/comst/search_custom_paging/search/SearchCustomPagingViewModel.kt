@@ -8,6 +8,7 @@ import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
 import com.comst.domain.util.onFailure
 import com.comst.domain.util.onSuccess
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
+import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingSideEffect
@@ -33,6 +34,7 @@ class SearchCustomPagingViewModel @Inject constructor(
             is SearchCustomPagingIntent.MediaSearch -> onMediaSearchResult(true)
             is SearchCustomPagingIntent.Refresh -> onMediaSearchResult(true)
             is SearchCustomPagingIntent.NextPage -> onMediaSearchResult(false)
+            is SearchCustomPagingIntent.ToggleFavorite -> onToggleFavorite(intent.displayKaKaoSearchMedia)
         }
     }
 
@@ -105,5 +107,9 @@ class SearchCustomPagingViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onToggleFavorite(displayKaKaoSearchMedia: DisplayKaKaoSearchMedia){
+
     }
 }

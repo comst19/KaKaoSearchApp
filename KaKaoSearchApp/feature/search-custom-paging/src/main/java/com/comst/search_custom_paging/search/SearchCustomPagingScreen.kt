@@ -325,7 +325,9 @@ private fun KaKaoSearchResultCustomPagingColumnPull(
                     onClickImage = {
                         expanded = !expanded
                     },
-                    onClickFavorite = { },
+                    onClickFavorite = {
+                        setIntent(SearchCustomPagingIntent.ToggleFavorite(this))
+                    },
                 )
             }
         },
