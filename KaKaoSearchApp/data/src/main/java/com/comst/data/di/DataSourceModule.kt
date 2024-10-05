@@ -1,5 +1,7 @@
 package com.comst.data.di
 
+import com.comst.data.repository.kakao.favorite.local.FavoriteLocalDataSource
+import com.comst.data.repository.kakao.favorite.local.FavoriteLocalDataSourceImpl
 import com.comst.data.repository.kakao.search.remote.KaKaoSearchRemoteDataSource
 import com.comst.data.repository.kakao.search.remote.KaKaoSearchRemoteDataSourceImpl
 import com.comst.data.repository.sample.remote.SampleRemoteDataSource
@@ -29,4 +31,9 @@ abstract class DataSourceModule {
     abstract fun bindKaKaoSearchRemoteDataSource(
         kaKaoSearchRemoteDataSource: KaKaoSearchRemoteDataSourceImpl
     ): KaKaoSearchRemoteDataSource
+
+    @Binds
+    abstract fun bindFavoriteLocalDataSource(
+        favoriteLocalDataSource: FavoriteLocalDataSourceImpl
+    ): FavoriteLocalDataSource
 }
