@@ -6,6 +6,7 @@ import com.comst.data.util.LocalDateAdapter
 import com.comst.data.util.LocalDateTimeAdapter
 import com.comst.data.util.UnitJsonAdapter
 import com.comst.data.util.ZonedDateTimeAdapter
+import com.comst.model.KaKaoSearchMedia
 import com.comst.model.KaKaoSearchMediaModel
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -23,8 +24,8 @@ object MoshiProvider {
     private val errorResponseAdapter: JsonAdapter<ErrorResponse> =
         moshi.adapter(ErrorResponse::class.java)
 
-    private val kaKaoSearchMediaModelAdapter: JsonAdapter<KaKaoSearchMediaModel> =
-        moshi.adapter(KaKaoSearchMediaModel::class.java)
+    private val kaKaoSearchMediaModelAdapter: JsonAdapter<KaKaoSearchMedia> =
+        moshi.adapter(KaKaoSearchMedia::class.java)
 
     fun getErrorBody(body: String): ErrorResponse? {
         return runCatching {
@@ -34,7 +35,7 @@ object MoshiProvider {
         }.getOrNull()
     }
 
-    fun KaKaoSearchMediaModel.toJsonString(): String {
+    fun KaKaoSearchMedia.toJsonString(): String {
         return runCatching {
             kaKaoSearchMediaModelAdapter.toJson(this)
         }.onFailure { throwable ->
@@ -42,7 +43,7 @@ object MoshiProvider {
         }.getOrDefault("")
     }
 
-    fun String.toMediaModel(): KaKaoSearchMediaModel? {
+    fun String.toMediaModel(): KaKaoSearchMedia? {
         return runCatching {
             kaKaoSearchMediaModelAdapter.fromJson(this)
         }.onFailure { throwable ->

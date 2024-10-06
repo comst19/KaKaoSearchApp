@@ -1,9 +1,10 @@
 package com.comst.data.repository.kakao.favorite.local
 
-import com.comst.model.KaKaoSearchMediaModel
+import com.comst.model.KaKaoSearchMedia
+import kotlinx.coroutines.flow.Flow
 
 interface FavoriteLocalDataSource {
-    fun saveFavorite(mediaModel: KaKaoSearchMediaModel)
-    fun deleteFavorite(mediaModel: KaKaoSearchMediaModel)
-    fun getAllFavorites(): List<KaKaoSearchMediaModel>
+    fun saveFavorite(mediaModel: KaKaoSearchMedia)
+    fun deleteFavorite(mediaModel: KaKaoSearchMedia)
+    fun getAllFavorites(): Flow<List<KaKaoSearchMedia>>
 }

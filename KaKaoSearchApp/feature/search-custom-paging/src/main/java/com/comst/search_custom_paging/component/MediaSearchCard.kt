@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -49,6 +50,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.comst.designsystem.R
 import com.comst.designsystem.theme.BaseTheme
+import com.comst.designsystem.theme.Red300
 import com.comst.model.KaKaoSearchMedia
 import com.comst.model.KaKaoSearchMediaType
 import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
@@ -235,6 +237,7 @@ fun MediaSearchCard(
                             R.drawable.ic_favorite_border_24
                         }
                     ),
+                    tint = if (media.isFavorite) Red300 else Color.Unspecified,
                     contentDescription = "Favorite",
                     modifier = Modifier
                         .size(36.dp)
