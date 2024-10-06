@@ -18,3 +18,8 @@ fun KaKaoSearchMediaModel.toDisplayKaKaoSearchMedia() = DisplayKaKaoSearchMedia(
     isFavorite = this.isFavorite,
     kaKaoSearchMedia = this.media
 )
+
+fun DisplayKaKaoSearchMedia.toKaKaoSearchMediaModel() = KaKaoSearchMediaModel(
+    isFavorite = this.isFavorite,
+    media = this.kaKaoSearchMedia
+)

@@ -1,7 +1,10 @@
 package com.comst.search_custom_paging.search
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.map
+import com.comst.domain.usecase.kakao.favorite.DeleteFavoriteUseCase
+import com.comst.domain.usecase.kakao.favorite.SaveFavoriteUseCase
 import com.comst.search_custom_paging.model.toDisplayKaKaoSearchMedia
 import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchPagingUseCase
 import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
@@ -9,6 +12,7 @@ import com.comst.domain.util.onFailure
 import com.comst.domain.util.onSuccess
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
+import com.comst.search_custom_paging.model.toKaKaoSearchMediaModel
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingSideEffect
@@ -24,6 +28,8 @@ import javax.inject.Inject
 class SearchCustomPagingViewModel @Inject constructor(
     private val getKaKaoMediaSearchPagingUseCase: GetKaKaoMediaSearchPagingUseCase,
     private val getKaKaoMediaSearchSortedUseCase: GetKaKaoMediaSearchSortedUseCase,
+    private val saveFavoriteUseCase: SaveFavoriteUseCase,
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
 ) : BaseViewModel<SearchCustomPagingUIState, SearchCustomPagingSideEffect, SearchCustomPagingIntent, SearchCustomPagingEvent>(
     SearchCustomPagingUIState()
 ) {
@@ -109,7 +115,42 @@ class SearchCustomPagingViewModel @Inject constructor(
         }
     }
 
-    private fun onToggleFavorite(displayKaKaoSearchMedia: DisplayKaKaoSearchMedia){
+    private fun onToggleFavorite(displayKaKaoSearchMedia: DisplayKaKaoSearchMedia) = viewModelScope.launch {
 
+        val kaKaoSearchMediaModel = displayKaKaoSearchMedia.toKaKaoSearchMediaModel()
+
+        if (displayKaKaoSearchMedia.isFavorite) {
+            deleteFavoriteUseCase(kaKaoSearchMediaModel).onSuccess {
+                setState {
+                    copy(
+                        kaKaoSearchList = kaKaoSearchList.map {
+                            if (it == displayKaKaoSearchMedia) {
+                                it.copy(isFavorite = false)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+            }.onFailure {
+
+            }
+        } else {
+            saveFavoriteUseCase(kaKaoSearchMediaModel).onSuccess {
+                setState {
+                    copy(
+                        kaKaoSearchList = kaKaoSearchList.map {
+                            if (it == displayKaKaoSearchMedia) {
+                                it.copy(isFavorite = true)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+            }.onFailure {
+
+            }
+        }
     }
 }

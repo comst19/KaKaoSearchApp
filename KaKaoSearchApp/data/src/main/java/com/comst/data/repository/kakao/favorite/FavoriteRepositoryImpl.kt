@@ -1,5 +1,6 @@
 package com.comst.data.repository.kakao.favorite
 
+import android.util.Log
 import com.comst.data.repository.kakao.favorite.local.FavoriteLocalDataSource
 import com.comst.domain.repository.FavoriteRepository
 import com.comst.model.KaKaoSearchMediaModel
@@ -10,14 +11,29 @@ class FavoriteRepositoryImpl @Inject constructor(
 ) : FavoriteRepository {
 
     override fun saveFavorite(mediaModel: KaKaoSearchMediaModel) {
-        favoriteLocalDataSource.saveFavorite(mediaModel)
+        try {
+            favoriteLocalDataSource.saveFavorite(mediaModel)
+        } catch (e: Exception) {
+            Log.e("FavoriteRepository", "Failed to save favorite: ${e.message}")
+            throw e
+        }
     }
 
     override fun deleteFavorite(mediaModel: KaKaoSearchMediaModel) {
-        favoriteLocalDataSource.deleteFavorite(mediaModel)
+        try {
+            favoriteLocalDataSource.deleteFavorite(mediaModel)
+        } catch (e: Exception) {
+            Log.e("FavoriteRepository", "Failed to delete favorite: ${e.message}")
+            throw e
+        }
     }
 
     override fun getAllFavorites(): List<KaKaoSearchMediaModel> {
-        return favoriteLocalDataSource.getAllFavorites()
+        return try {
+            favoriteLocalDataSource.getAllFavorites()
+        } catch (e: Exception) {
+            Log.e("FavoriteRepository", "Failed to get all favorites: ${e.message}")
+            throw e
+        }
     }
 }
