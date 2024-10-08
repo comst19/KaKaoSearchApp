@@ -1,1 +1,2 @@
 # KaKaoSearchApp
+MVVM + MVI, SAA
