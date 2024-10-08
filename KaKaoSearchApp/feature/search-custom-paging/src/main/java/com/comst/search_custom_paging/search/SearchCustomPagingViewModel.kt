@@ -9,9 +9,9 @@ import com.comst.domain.usecase.kakao.search.GetKaKaoMediaSearchSortedUseCase
 import com.comst.domain.util.onFailure
 import com.comst.domain.util.onSuccess
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
-import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
-import com.comst.search_custom_paging.model.toDisplayKaKaoSearchMedia
-import com.comst.search_custom_paging.model.toKaKaoSearchMedia
+import com.comst.ui_model.DisplayKaKaoSearchMedia
+import com.comst.ui_model.toDisplayKaKaoSearchMedia
+import com.comst.ui_model.toKaKaoSearchMedia
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingEvent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingIntent
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.SearchCustomPagingSideEffect

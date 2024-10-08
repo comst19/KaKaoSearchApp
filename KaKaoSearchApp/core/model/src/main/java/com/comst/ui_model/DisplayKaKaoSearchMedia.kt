@@ -1,9 +1,8 @@
-package com.comst.search_custom_paging.model
+package com.comst.ui_model
 
 import com.comst.model.KaKaoSearchContentModel
 import com.comst.model.KaKaoSearchMedia
 import com.comst.model.KaKaoSearchMediaModel
-import com.comst.model.KaKaoSearchMediaType
 
 data class DisplayKaKaoSearchMedia (
     val isFavorite: Boolean,

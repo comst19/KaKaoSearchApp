@@ -40,7 +40,7 @@ import com.comst.designsystem.component.error.ErrorScreen
 import com.comst.search_custom_paging.component.MediaSearchCard
 import com.comst.designsystem.component.loading.LoadingWheel
 import com.comst.designsystem.theme.BaseTheme
-import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
+import com.comst.ui_model.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.R
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.search_custom_paging.component.KaKaoSearchbar

@@ -2,7 +2,7 @@ package com.comst.search_custom_paging.search
 
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
-import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
+import com.comst.ui_model.DisplayKaKaoSearchMedia
 import com.comst.search_custom_paging.component.KaKaoSearchUiState
 import com.comst.ui.base.BaseEvent
 import com.comst.ui.base.BaseIntent

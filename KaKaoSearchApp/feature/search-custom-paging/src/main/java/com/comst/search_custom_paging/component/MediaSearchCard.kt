@@ -53,7 +53,7 @@ import com.comst.designsystem.theme.BaseTheme
 import com.comst.designsystem.theme.Red300
 import com.comst.model.KaKaoSearchMedia
 import com.comst.model.KaKaoSearchMediaType
-import com.comst.search_custom_paging.model.DisplayKaKaoSearchMedia
+import com.comst.ui_model.DisplayKaKaoSearchMedia
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
