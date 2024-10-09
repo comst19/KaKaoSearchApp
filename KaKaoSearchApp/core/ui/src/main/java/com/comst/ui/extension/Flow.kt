@@ -9,8 +9,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.comst.ui.util.OnetimeWhileSubscribed
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -61,4 +64,18 @@ inline fun <reified T> Flow<T>.collectWithLifecycle(
             this@collectWithLifecycle.collect { action(it) }
         }
     }
+}
+
+
+fun <T> Flow<T>.stateInWhileSubscribed(
+    scope: CoroutineScope,
+    stopTimeout: Long = 5_000,
+    replayExpiration: Long = Long.MAX_VALUE,
+    initialValue: T
+): StateFlow<T> {
+    return this.stateIn(
+        scope = scope,
+        started = OnetimeWhileSubscribed(stopTimeout, replayExpiration),
+        initialValue = initialValue
+    )
 }
