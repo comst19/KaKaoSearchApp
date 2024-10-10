@@ -1,2 +1,2 @@
 # KaKaoSearchApp
-MVVM + MVI, SAA
+MVVM + MVI, SAA, Compose
