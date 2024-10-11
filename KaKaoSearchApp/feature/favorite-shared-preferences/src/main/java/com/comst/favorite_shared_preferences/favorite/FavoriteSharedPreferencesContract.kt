@@ -24,6 +24,6 @@ class FavoriteSharedPreferencesContract {
     }
 
     sealed interface FavoriteSharedPreferencesEvent: BaseEvent {
-        data object LoadFavoriteMediaList : FavoriteSharedPreferencesEvent
+
     }
 }
