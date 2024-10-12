@@ -331,6 +331,9 @@ private fun KaKaoSearchResultCustomPagingColumnPull(
                 )
             }
         },
+        key = { mediaItem ->
+            "${mediaItem.kaKaoSearchMedia.url}${mediaItem.kaKaoSearchMedia.thumbnailUrl}"
+        },
         onRefresh = { setIntent(SearchCustomPagingIntent.Refresh) },
         onLoadMore = { setIntent(SearchCustomPagingIntent.NextPage) },
         modifier = modifier,

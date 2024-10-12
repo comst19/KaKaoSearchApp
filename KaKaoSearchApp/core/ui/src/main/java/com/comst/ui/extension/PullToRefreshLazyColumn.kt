@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 fun <T> PullToRefreshLazyColumn(
     items: List<T>,
     content: @Composable (T) -> Unit,
+    key: ((T) -> Any)? = null,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
@@ -53,7 +54,10 @@ fun <T> PullToRefreshLazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items) {
+            items(
+                items = items,
+                key = if (key != null) { item -> key(item) } else null
+            ) {
                 content(it)
             }
 
