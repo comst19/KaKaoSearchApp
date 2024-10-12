@@ -23,25 +23,6 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
     FavoriteSharedPreferencesUIState()
 ) {
 
-    init {
-        viewModelScope.launch {
-            getAllFavoritesUseCase().onSuccess { favoriteList ->
-                setState {
-                    copy(
-                        isLoading = false,
-                        favoriteMediaList = favoriteList.map { it.toDisplayKaKaoSearchMedia() }
-                    )
-                }
-            }.onFailure {
-                setState {
-                    copy(
-                        isLoading = false
-                    )
-                }
-            }
-        }
-    }
-
     override fun handleIntent(intent: FavoriteSharedPreferencesIntent) {
         when (intent) {
             is FavoriteSharedPreferencesIntent.CancelFavorite -> onCancelFavorite(intent.displayKaKaoSearchMedia)
@@ -49,25 +30,42 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
     }
 
     override fun handleEvent(event: FavoriteSharedPreferencesEvent) {
-
+        when(event){
+            FavoriteSharedPreferencesEvent.LoadFavorites -> onLoadFavorite()
+        }
     }
 
-    private fun onCancelFavorite(displayKaKaoSearchMedia: DisplayKaKaoSearchMedia) =
-        viewModelScope.launch {
-            val kaKaoSearchMediaModel = displayKaKaoSearchMedia.toKaKaoSearchMedia()
-
-            deleteFavoriteUseCase(kaKaoSearchMediaModel).onSuccess {
-                setState {
-                    copy(
-                        canceledSet = currentState.canceledSet + displayKaKaoSearchMedia,
-                        favoriteMediaList = currentState.favoriteMediaList.filter {
-                            it.kaKaoSearchMedia != displayKaKaoSearchMedia.kaKaoSearchMedia
-                        }
-                    )
-                }
-            }.onFailure {
-
+    private fun onLoadFavorite() = viewModelScope.launch{
+        getAllFavoritesUseCase().onSuccess { favoriteList ->
+            setState {
+                copy(
+                    isLoading = false,
+                    favoriteMediaList = favoriteList.map { it.toDisplayKaKaoSearchMedia() }
+                )
+            }
+        }.onFailure {
+            setState {
+                copy(
+                    isLoading = false
+                )
             }
         }
+    }
+
+    private fun onCancelFavorite(displayKaKaoSearchMedia: DisplayKaKaoSearchMedia) = viewModelScope.launch {
+        val kaKaoSearchMediaModel = displayKaKaoSearchMedia.toKaKaoSearchMedia()
+        deleteFavoriteUseCase(kaKaoSearchMediaModel).onSuccess {
+            setState {
+                copy(
+                    canceledSet = currentState.canceledSet + displayKaKaoSearchMedia,
+                    favoriteMediaList = currentState.favoriteMediaList.filter {
+                        it.kaKaoSearchMedia != displayKaKaoSearchMedia.kaKaoSearchMedia
+                    }
+                )
+            }
+        }.onFailure {
+
+        }
+    }
 
 }
