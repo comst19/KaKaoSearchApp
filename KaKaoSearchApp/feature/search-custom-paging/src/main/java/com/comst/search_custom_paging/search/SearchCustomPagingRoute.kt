@@ -3,7 +3,9 @@ package com.comst.search_custom_paging.search
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.comst.search_custom_paging.search.SearchCustomPagingContract.*
 import com.comst.ui.SnackbarToken
 import com.comst.ui.extension.collectAsStateWithLifecycle
 import com.comst.ui.extension.collectWithLifecycle
@@ -20,6 +22,10 @@ fun SearchCustomPagingRoute(
 
     viewModel.effect.collectWithLifecycle { effect ->
 
+    }
+
+    LaunchedEffect(true) {
+        viewModel.setEvent(SearchCustomPagingEvent.RestoreMediaState)
     }
 
     SearchCustomPagingScreen(

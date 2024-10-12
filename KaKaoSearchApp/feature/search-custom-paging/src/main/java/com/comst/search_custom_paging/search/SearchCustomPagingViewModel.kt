@@ -44,7 +44,39 @@ class SearchCustomPagingViewModel @Inject constructor(
     }
 
     override fun handleEvent(event: SearchCustomPagingEvent) {
+        when(event){
+            is SearchCustomPagingEvent.RestoreMediaState -> onRestoreMediaState()
+        }
+    }
 
+    private fun onRestoreMediaState() = viewModelScope.launch{
+        setState {
+            copy(
+                kaKaoSearchList = emptyList(),
+                kaKaoSearchState = KaKaoSearchUiState.LOADING
+            )
+        }
+        getKaKaoMediaSearchSortedUseCase(
+            query = currentState.queryValue,
+            isReturning = true
+        ).collectLatest { result ->
+            result.onSuccess { searchDomainModel ->
+                setState {
+                    copy(
+                        kaKaoSearchList = searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() },
+                        kaKaoSearchState = KaKaoSearchUiState.SHOW_RESULT,
+                        isRefreshing = false
+                    )
+                }
+            }.onFailure {
+                setState {
+                    copy(
+                        kaKaoSearchState = KaKaoSearchUiState.ERROR,
+                        isRefreshing = false
+                    )
+                }
+            }
+        }
     }
 
     private fun onQueryChange(query: String) {
@@ -102,7 +134,6 @@ class SearchCustomPagingViewModel @Inject constructor(
                         isRefreshing = false
                     )
                 }
-                searchDomainModel.itemList.map { it.toDisplayKaKaoSearchMedia() }
             }.onFailure {
                 setState {
                     copy(

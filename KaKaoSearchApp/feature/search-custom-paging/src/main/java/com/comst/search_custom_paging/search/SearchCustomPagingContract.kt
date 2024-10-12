@@ -36,6 +36,6 @@ class SearchCustomPagingContract {
     }
 
     sealed interface SearchCustomPagingEvent: BaseEvent {
-
+        data object RestoreMediaState: SearchCustomPagingEvent
     }
 }
