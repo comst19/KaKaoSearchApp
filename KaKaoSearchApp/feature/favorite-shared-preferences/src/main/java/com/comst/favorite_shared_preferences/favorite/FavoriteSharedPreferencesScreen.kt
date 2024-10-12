@@ -62,7 +62,8 @@ internal fun FavoriteSharedPreferencesScreen(
                 KaKaoFavoriteEmpty()
             } else {
                 KaKaoFavoriteGrid(
-                    favoriteMediaList = uiState.favoriteMediaList
+                    favoriteMediaList = uiState.favoriteMediaList,
+                    setIntent = setIntent
                 )
             }
         }
@@ -105,7 +106,8 @@ private val gridItemSpan: (LazyGridItemSpanScope) -> GridItemSpan = { GridItemSp
 @Composable
 private fun KaKaoFavoriteGrid(
     modifier: Modifier = Modifier,
-    favoriteMediaList: List<DisplayKaKaoSearchMedia>
+    favoriteMediaList: List<DisplayKaKaoSearchMedia>,
+    setIntent: (FavoriteSharedPreferencesIntent) -> Unit = {}
 ){
     val gridState = rememberLazyGridState()
 
@@ -138,7 +140,9 @@ private fun KaKaoFavoriteGrid(
     ) {
         items(
             count = favoriteMediaList.size,
-            key = { index -> index },
+            key = { index ->
+                "${favoriteMediaList[index].kaKaoSearchMedia.url}${favoriteMediaList[index].kaKaoSearchMedia.thumbnailUrl}"
+            },
         ) { index ->
             val mediaItem = favoriteMediaList[index]
 
@@ -149,7 +153,9 @@ private fun KaKaoFavoriteGrid(
                 media = mediaItem,
                 onClickLink = { },
                 onClickImage = { },
-                onClickFavorite = { },
+                onClickFavorite = {
+                    setIntent(FavoriteSharedPreferencesIntent.CancelFavorite(it))
+                },
             )
         }
 

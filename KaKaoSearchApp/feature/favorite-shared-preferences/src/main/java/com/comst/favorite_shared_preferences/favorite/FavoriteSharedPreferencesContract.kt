@@ -12,7 +12,8 @@ class FavoriteSharedPreferencesContract {
     @Immutable
     data class FavoriteSharedPreferencesUIState(
         val isLoading: Boolean = true,
-        val favoriteMediaList: List<DisplayKaKaoSearchMedia> = emptyList()
+        val favoriteMediaList: List<DisplayKaKaoSearchMedia> = emptyList(),
+        val canceledSet: Set<DisplayKaKaoSearchMedia> = emptySet()
     ): BaseUIState
 
     sealed interface FavoriteSharedPreferencesSideEffect: BaseSideEffect {
@@ -20,7 +21,7 @@ class FavoriteSharedPreferencesContract {
     }
 
     sealed interface FavoriteSharedPreferencesIntent: BaseIntent {
-
+        data class CancelFavorite(val displayKaKaoSearchMedia: DisplayKaKaoSearchMedia): FavoriteSharedPreferencesIntent
     }
 
     sealed interface FavoriteSharedPreferencesEvent: BaseEvent {
