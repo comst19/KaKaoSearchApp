@@ -24,7 +24,7 @@ class SearchCustomPagingContract {
     ): BaseUIState
 
     sealed interface SearchCustomPagingSideEffect: BaseSideEffect {
-
+        data class NavigateToWeb(val uri: String): SearchCustomPagingSideEffect
     }
 
     sealed interface SearchCustomPagingIntent: BaseIntent {
@@ -33,6 +33,7 @@ class SearchCustomPagingContract {
         data object Refresh: SearchCustomPagingIntent
         data object NextPage: SearchCustomPagingIntent
         data class ToggleFavorite(val displayKaKaoSearchMedia: DisplayKaKaoSearchMedia): SearchCustomPagingIntent
+        data class ClickedWeb(val uri: String): SearchCustomPagingIntent
     }
 
     sealed interface SearchCustomPagingEvent: BaseEvent {

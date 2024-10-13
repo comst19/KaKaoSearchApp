@@ -17,11 +17,12 @@ class FavoriteSharedPreferencesContract {
     ): BaseUIState
 
     sealed interface FavoriteSharedPreferencesSideEffect: BaseSideEffect {
-
+        data class NavigateToWeb(val uri: String): FavoriteSharedPreferencesSideEffect
     }
 
     sealed interface FavoriteSharedPreferencesIntent: BaseIntent {
         data class CancelFavorite(val displayKaKaoSearchMedia: DisplayKaKaoSearchMedia): FavoriteSharedPreferencesIntent
+        data class ClickedImage(val uri: String): FavoriteSharedPreferencesIntent
     }
 
     sealed interface FavoriteSharedPreferencesEvent: BaseEvent {

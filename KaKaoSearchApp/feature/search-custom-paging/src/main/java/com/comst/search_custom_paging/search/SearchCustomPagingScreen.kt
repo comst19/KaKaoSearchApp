@@ -130,7 +130,7 @@ internal fun SearchCustomPagingScreen(
                 )
                 */
 
-                KaKaoSearchResultCustomPagingColumnPull(
+                KaKaoSearchResultCustomPagingColumn(
                     modifier = Modifier,
                     kaKaoSearchList = uiState.kaKaoSearchList,
                     isRefreshing = uiState.isRefreshing,
@@ -303,7 +303,7 @@ private fun KaKaoSearchResultCustomPagingColumn(
 }
 
 @Composable
-private fun KaKaoSearchResultCustomPagingColumnPull(
+private fun KaKaoSearchResultCustomPagingColumn(
     modifier: Modifier,
     kaKaoSearchList: List<DisplayKaKaoSearchMedia> = emptyList(),
     isRefreshing: Boolean,
@@ -321,7 +321,9 @@ private fun KaKaoSearchResultCustomPagingColumnPull(
                     modifier = modifier,
                     media = this,
                     isExpanded = expanded,
-                    onClickLink = { },
+                    onClickLink = { media ->
+                        setIntent(SearchCustomPagingIntent.ClickedWeb(media.kaKaoSearchMedia.url))
+                    },
                     onClickImage = {
                         expanded = !expanded
                     },

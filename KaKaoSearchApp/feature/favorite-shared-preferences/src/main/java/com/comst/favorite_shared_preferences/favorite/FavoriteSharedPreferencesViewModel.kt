@@ -26,6 +26,7 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
     override fun handleIntent(intent: FavoriteSharedPreferencesIntent) {
         when (intent) {
             is FavoriteSharedPreferencesIntent.CancelFavorite -> onCancelFavorite(intent.displayKaKaoSearchMedia)
+            is FavoriteSharedPreferencesIntent.ClickedImage -> setEffect(FavoriteSharedPreferencesSideEffect.NavigateToWeb(intent.uri))
         }
     }
 

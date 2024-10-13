@@ -151,8 +151,9 @@ private fun KaKaoFavoriteGrid(
                     .fillMaxWidth()
                     .aspectRatio(1f),
                 media = mediaItem,
-                onClickLink = { },
-                onClickImage = { },
+                onClickImage = { media ->
+                    setIntent(FavoriteSharedPreferencesIntent.ClickedImage(media.kaKaoSearchMedia.url))
+                },
                 onClickFavorite = {
                     setIntent(FavoriteSharedPreferencesIntent.CancelFavorite(it))
                 },

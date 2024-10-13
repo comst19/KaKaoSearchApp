@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.comst.search_custom_paging.search.SearchCustomPagingContract.*
 import com.comst.ui.SnackbarToken
@@ -18,10 +19,15 @@ fun SearchCustomPagingRoute(
 ){
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val uriHandler = LocalUriHandler.current
     val listState = rememberLazyListState()
 
     viewModel.effect.collectWithLifecycle { effect ->
-
+        when(effect){
+            is SearchCustomPagingSideEffect.NavigateToWeb -> {
+                uriHandler.openUri(effect.uri)
+            }
+        }
     }
 
     LaunchedEffect(true) {

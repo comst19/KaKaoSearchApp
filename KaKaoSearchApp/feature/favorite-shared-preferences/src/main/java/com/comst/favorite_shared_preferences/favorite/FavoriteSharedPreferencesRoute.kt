@@ -3,6 +3,7 @@ package com.comst.favorite_shared_preferences.favorite
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -24,9 +25,14 @@ fun FavoriteSharedPreferencesRoute(
 ){
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val uriHandler = LocalUriHandler.current
 
     viewModel.effect.collectWithLifecycle { effect ->
-
+        when(effect){
+            is FavoriteSharedPreferencesSideEffect.NavigateToWeb -> {
+                uriHandler.openUri(effect.uri)
+            }
+        }
     }
 
     LaunchedEffect(true) {

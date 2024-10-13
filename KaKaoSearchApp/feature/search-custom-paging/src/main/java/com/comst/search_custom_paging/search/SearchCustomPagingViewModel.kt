@@ -40,6 +40,7 @@ class SearchCustomPagingViewModel @Inject constructor(
             is SearchCustomPagingIntent.Refresh -> onMediaSearchResult(true)
             is SearchCustomPagingIntent.NextPage -> onMediaSearchResult(false)
             is SearchCustomPagingIntent.ToggleFavorite -> onToggleFavorite(intent.displayKaKaoSearchMedia)
+            is SearchCustomPagingIntent.ClickedWeb -> setEffect(SearchCustomPagingSideEffect.NavigateToWeb(intent.uri))
         }
     }
 
