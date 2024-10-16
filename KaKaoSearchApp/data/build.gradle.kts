@@ -43,4 +43,9 @@ dependencies {
     implementation(libs.paging)
 
     testImplementation(libs.junit)
+
+    implementation(libs.androidx.lifecycle.service)
+
+    implementation(libs.androidx.work)
+    implementation(libs.bundles.hilt.work)
 }

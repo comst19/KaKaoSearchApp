@@ -22,9 +22,16 @@ android {
     }
 }
 
+configurations.implementation{
+    exclude(group = "com.intellij", module = "annotations")
+}
+
 dependencies {
     implementation(projects.feature.navigator)
     implementation(projects.data)
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+
+    implementation(libs.bundles.hilt.work)
+
 }
