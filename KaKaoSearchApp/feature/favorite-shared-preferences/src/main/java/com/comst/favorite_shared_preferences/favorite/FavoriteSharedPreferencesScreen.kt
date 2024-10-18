@@ -154,6 +154,9 @@ private fun KaKaoFavoriteGrid(
                 onClickImage = { media ->
                     setIntent(FavoriteSharedPreferencesIntent.ClickedImage(media.kaKaoSearchMedia.url))
                 },
+                onDownLoadImage = { media ->
+                    setIntent(FavoriteSharedPreferencesIntent.DownLoadImage(media.kaKaoSearchMedia.originalUrl!!))
+                },
                 onClickFavorite = {
                     setIntent(FavoriteSharedPreferencesIntent.CancelFavorite(it))
                 },

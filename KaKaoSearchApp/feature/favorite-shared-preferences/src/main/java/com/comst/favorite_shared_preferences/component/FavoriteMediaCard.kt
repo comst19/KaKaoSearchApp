@@ -33,6 +33,7 @@ fun FavoriteMediaCard(
     modifier: Modifier = Modifier,
     media: DisplayKaKaoSearchMedia,
     onClickImage: (DisplayKaKaoSearchMedia) -> Unit,
+    onDownLoadImage: (DisplayKaKaoSearchMedia) -> Unit,
     onClickFavorite: (DisplayKaKaoSearchMedia) -> Unit,
 ) {
     Card(
@@ -59,7 +60,7 @@ fun FavoriteMediaCard(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
             ) {
-                /*
+
                 Icon(
                     painter = painterResource(id = R.drawable.ic_open_in_new_24),
                     contentDescription = "OpenWeb",
@@ -70,12 +71,12 @@ fun FavoriteMediaCard(
                         )
                         .clickable(
                             onClick = {
-
+                                onDownLoadImage(media)
                             },
                         )
                         .padding(6.dp)
                 )
-                 */
+
                 Icon(
                     painter = painterResource(
                         id = if (media.isFavorite) {
@@ -127,6 +128,7 @@ internal fun MediaCardPreview() {
                     )
                 ),
                 onClickImage = { },
+                onDownLoadImage = { },
                 onClickFavorite = { },
             )
         }

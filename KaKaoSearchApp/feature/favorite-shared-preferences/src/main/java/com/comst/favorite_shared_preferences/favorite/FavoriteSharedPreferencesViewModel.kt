@@ -1,6 +1,8 @@
 package com.comst.favorite_shared_preferences.favorite
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.comst.domain.usecase.download.ImageDownloadUseCase
 import com.comst.domain.usecase.kakao.favorite.DeleteFavoriteUseCase
 import com.comst.domain.usecase.kakao.favorite.GetAllFavoritesUseCase
 import com.comst.favorite_shared_preferences.favorite.FavoriteSharedPreferencesContract.FavoriteSharedPreferencesEvent
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class FavoriteSharedPreferencesViewModel @Inject constructor(
     private val getAllFavoritesUseCase: GetAllFavoritesUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    private val imageDownloadUseCase: ImageDownloadUseCase
 ) : BaseViewModel<FavoriteSharedPreferencesUIState, FavoriteSharedPreferencesSideEffect, FavoriteSharedPreferencesIntent, FavoriteSharedPreferencesEvent>(
     FavoriteSharedPreferencesUIState()
 ) {
@@ -27,6 +30,7 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
         when (intent) {
             is FavoriteSharedPreferencesIntent.CancelFavorite -> onCancelFavorite(intent.displayKaKaoSearchMedia)
             is FavoriteSharedPreferencesIntent.ClickedImage -> setEffect(FavoriteSharedPreferencesSideEffect.NavigateToWeb(intent.uri))
+            is FavoriteSharedPreferencesIntent.DownLoadImage -> onImageDownload(intent.originalUrl)
         }
     }
 
@@ -67,6 +71,10 @@ class FavoriteSharedPreferencesViewModel @Inject constructor(
         }.onFailure {
 
         }
+    }
+
+    private fun onImageDownload(originalUrl: String) = viewModelScope.launch {
+        imageDownloadUseCase(originalUrl)
     }
 
 }

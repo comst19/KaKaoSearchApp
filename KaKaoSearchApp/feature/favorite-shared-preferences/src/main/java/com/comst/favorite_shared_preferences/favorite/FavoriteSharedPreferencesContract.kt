@@ -23,6 +23,7 @@ class FavoriteSharedPreferencesContract {
     sealed interface FavoriteSharedPreferencesIntent: BaseIntent {
         data class CancelFavorite(val displayKaKaoSearchMedia: DisplayKaKaoSearchMedia): FavoriteSharedPreferencesIntent
         data class ClickedImage(val uri: String): FavoriteSharedPreferencesIntent
+        data class DownLoadImage(val originalUrl: String): FavoriteSharedPreferencesIntent
     }
 
     sealed interface FavoriteSharedPreferencesEvent: BaseEvent {
