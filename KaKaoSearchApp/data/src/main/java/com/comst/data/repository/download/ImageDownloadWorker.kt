@@ -12,11 +12,11 @@ import dagger.assisted.AssistedInject
 
 @HiltWorker
 class ImageDownloadWorker @AssistedInject constructor(
-    @Assisted context: Context,
-    @Assisted params: WorkerParameters,
+    @Assisted private val appContext: Context,
+    @Assisted private val params: WorkerParameters,
     private val imageDownloadRemoteDataSource: ImageDownloadRemoteDataSource,
     private val imageSaveLocalDataSource: ImageSaveLocalDataSource,
-) : CoroutineWorker(context, params) {
+) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
         Log.d("다운로드", "진행")

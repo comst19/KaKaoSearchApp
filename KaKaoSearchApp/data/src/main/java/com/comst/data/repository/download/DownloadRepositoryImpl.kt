@@ -18,9 +18,9 @@ class DownloadRepositoryImpl @Inject constructor(
 
     override suspend fun imageDownload(imageUrl: String){
         Log.d("다운로드", "오나?")
+        /*
         val imageData = imageDownloadRemoteDataSource.downloadImage(imageUrl)
 
-        // 이미지 저장
         imageData.fold(
             onSuccess = { data ->
                 imageSaveLocalDataSource.saveImageToGallery(data)
@@ -30,11 +30,11 @@ class DownloadRepositoryImpl @Inject constructor(
                 Log.d("다운로드", "이미지 다운로드 실패: ${exception.message}")
             }
         )
+        */
+        val workRequest = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
+            .setInputData(workDataOf("IMAGE_URL" to imageUrl))
+            .build()
 
-//        val workRequest = OneTimeWorkRequestBuilder<ImageDownloadWorker>()
-//            .setInputData(workDataOf("IMAGE_URL" to imageUrl))
-//            .build()
-//
-//        WorkManager.getInstance(context).enqueue(workRequest)
+        WorkManager.getInstance(context).enqueue(workRequest)
     }
 }
