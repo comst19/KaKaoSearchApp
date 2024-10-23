@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.comst.android.library)
     alias(libs.plugins.comst.android.hilt)
+    alias(libs.plugins.comst.android.hilt.worker)
 }
 
 val properties = Properties()
@@ -45,9 +46,4 @@ dependencies {
     testImplementation(libs.junit)
 
     implementation(libs.androidx.lifecycle.service)
-
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-    implementation("androidx.hilt:hilt-work:1.2.0")
-    // When using Kotlin.
-    ksp("androidx.hilt:hilt-compiler:1.2.0")
 }

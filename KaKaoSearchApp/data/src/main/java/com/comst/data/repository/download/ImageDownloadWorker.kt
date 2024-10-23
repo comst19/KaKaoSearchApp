@@ -1,7 +1,6 @@
 package com.comst.data.repository.download
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -19,21 +18,22 @@ class ImageDownloadWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        Log.d("다운로드", "진행")
-        val imageUrl = inputData.getString("IMAGE_URL") ?: return Result.failure()
+        val imageUrl = inputData.getString(IMAGE_URL) ?: return Result.failure()
         return imageDownloadRemoteDataSource.downloadImage(imageUrl)
             .mapCatching { imageData ->
                 imageSaveLocalDataSource.saveImageToGallery(imageData)
             }
             .fold(
                 onSuccess = {
-                    Log.d("다운로드", "성공")
                     Result.success()
                 },
                 onFailure = { exception ->
-                    Log.d("다운로드", "실패: ${exception.message}")
                     Result.retry()
                 }
             )
+    }
+
+    companion object {
+        const val IMAGE_URL = "imageUrl"
     }
 }

@@ -19,7 +19,6 @@ class ImageSaveLocalDataSourceImpl @Inject constructor(
 ) : ImageSaveLocalDataSource {
 
     override suspend fun saveImageToGallery(imageData: ByteArray) = withContext(Dispatchers.IO) {
-        Log.d("다운로드", "갤러리 저장")
         runCatching {
             val filename = "IMG_${System.currentTimeMillis()}.jpg"
             val outputStream: OutputStream
