@@ -12,7 +12,6 @@ class ImageDownloadRemoteDataSourceImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
 ) : ImageDownloadRemoteDataSource {
     override suspend fun downloadImage(imageUrl: String): Result<ByteArray> = withContext(Dispatchers.IO) {
-        Log.d("다운로드", "이미지 변환 저장")
         runCatching {
             val request = Request.Builder()
                 .url(imageUrl)
