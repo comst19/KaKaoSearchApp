@@ -17,7 +17,7 @@ class MainContract {
     ): BaseUIState
 
     sealed interface MainSideEffect : BaseSideEffect {
-        data object ShowSnackBar : MainSideEffect
+
     }
 
     sealed interface MainIntent : BaseIntent {
@@ -25,6 +25,6 @@ class MainContract {
     }
 
     sealed interface MainEvent : BaseEvent {
-
+        data class ShowSnackbar(val snackbarToken: SnackbarToken) : MainEvent
     }
 }

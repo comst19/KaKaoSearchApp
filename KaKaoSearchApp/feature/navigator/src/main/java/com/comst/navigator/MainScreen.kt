@@ -30,6 +30,7 @@ import com.comst.designsystem.component.snackbar.KaKaoSnackbar
 import com.comst.designsystem.theme.Background100
 import com.comst.favorite_shared_preferences.navigation.favoriteSharedPreferencesNavGraph
 import com.comst.home.navigation.homeNavGraph
+import com.comst.navigator.MainContract.*
 import com.comst.search_custom_paging.navigation.searchCustomPagingRouteNavGraph
 import com.comst.signin.navigation.signInNavGraph
 import com.comst.ui.extension.collectAsStateWithLifecycle
@@ -37,18 +38,14 @@ import com.comst.ui.extension.collectWithLifecycle
 
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: MainViewModel,
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     viewModel.effect.collectWithLifecycle { effect ->
-        when (effect) {
-            is MainContract.MainSideEffect.ShowSnackBar -> {
-                viewModel.onShowSnackbar(uiState.snackbarToken)
-            }
-        }
+
     }
 
     Scaffold(
@@ -71,27 +68,35 @@ fun MainScreen(
             signInNavGraph(
                 navigateToSignUp = navigator::navigateSignUp,
                 navigateToHome = navigator::navigateHomeAndClearBackStack,
-                onShowSnackBar = viewModel::onShowSnackbar,
+                onShowSnackBar = { snackbarToken ->
+                    viewModel.setEvent(MainEvent.ShowSnackbar(snackbarToken))
+                },
                 onBackClick = navigator::popBackStack
             )
 
             homeNavGraph(
                 padding = innerPadding,
-                onShowSnackbar = viewModel::onShowSnackbar,
+                onShowSnackbar = { snackbarToken ->
+                    viewModel.setEvent(MainEvent.ShowSnackbar(snackbarToken))
+                },
                 navigateBack = navigator::popBackStack
             )
 
             favoriteSharedPreferencesNavGraph(
                 padding = innerPadding,
                 navigateFavoriteSharedPreferences = navigator::navigateFavoriteSharedPreferences,
-                onShowSnackbar = viewModel::onShowSnackbar,
+                onShowSnackbar = { snackbarToken ->
+                    viewModel.setEvent(MainEvent.ShowSnackbar(snackbarToken))
+                },
                 navigateBack = navigator::popBackStack
             )
 
             searchCustomPagingRouteNavGraph(
                 padding = innerPadding,
                 navigateSearchCustomPaging = navigator::navigateSearchCustomPaging,
-                onShowSnackbar = viewModel::onShowSnackbar,
+                onShowSnackbar = { snackbarToken ->
+                    viewModel.setEvent(MainEvent.ShowSnackbar(snackbarToken))
+                },
                 navigateBack = navigator::popBackStack
             )
         }

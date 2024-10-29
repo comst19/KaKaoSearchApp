@@ -23,11 +23,13 @@ class MainViewModel @Inject constructor(
     }
 
     override fun handleEvent(event: MainEvent) {
-
+        when (event) {
+            is MainEvent.ShowSnackbar -> onShowSnackbar(event.snackbarToken)
+        }
     }
 
 
-    fun onShowSnackbar(snackbarToken: SnackbarToken){
+    private fun onShowSnackbar(snackbarToken: SnackbarToken){
         viewModelScope.launch {
             mutex.withLock {
                 setState {
@@ -39,12 +41,6 @@ class MainViewModel @Inject constructor(
                 delay(SHOW_TOAST_LENGTH)
                 setState { copy(snackbarVisible = false) }
             }
-        }
-    }
-
-    private fun onCloseSnackbar() {
-        viewModelScope.launch {
-            setState { copy(snackbarVisible = false) }
         }
     }
 
